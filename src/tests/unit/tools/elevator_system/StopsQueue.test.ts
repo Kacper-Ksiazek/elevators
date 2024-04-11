@@ -1,19 +1,16 @@
-import {ElevatorRoute, StopsCollection} from "../../../../tools/elevator_system/ElevatorRoute.ts";
-import {ElevatorCannotMoveThereError} from "../../../../tools/elevator_system/Errors/ElevatorCannotMoveThereError.ts";
-import {
-    ElevatorIsAlreadyGoingThereError
-} from "../../../../tools/elevator_system/Errors/ElevatorIsAlreadyGoingThereError.ts";
-import {Elevator} from "../../../../tools/elevator_system/Elevator.ts";
-import {ElevatorMoveDirection, ElevatorStatus} from "../../../../tools/elevator_system/@types.ts";
+import { ElevatorRoute, StopsCollection } from "@Elevator/ElevatorRoute.ts";
+import { ElevatorCannotMoveThereError } from "@Elevator/Errors/ElevatorCannotMoveThereError.ts";
+import { Elevator } from "@Elevator/Elevator.ts";
+import { ElevatorMoveDirection, ElevatorStatus } from "@Elevator/@types.ts";
 import {
     ElevatorIsCurrentlyAtThisFloorError
-} from "../../../../tools/elevator_system/Errors/ElevatorIsCurrentlyAtThisFloorError.ts";
+} from "@Elevator/Errors/ElevatorIsCurrentlyAtThisFloorError.ts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function printRoutes(routes: ElevatorRoute[]) {
     routes.forEach(move => {
         console.log(`Direction: ${move.direction}, Stops: ${move.stops}`);
-    })
+    });
 }
 
 describe("StopsCollection:", () => {
@@ -221,7 +218,7 @@ describe("Elevator", () => {
     test("By default elevator should be IDLE", () => {
         const elevator = new Elevator();
         expect(elevator.status).toEqual("IDLE");
-    })
+    });
 
     test("Simulate going up with 1 stop (from current floor)", () => {
         const elevator = new Elevator();
@@ -246,7 +243,7 @@ describe("Elevator", () => {
 
         elevator.makeSimulationMove();
         expect(elevator.status).toEqual("IDLE" as ElevatorStatus);
-    })
+    });
 
     test("Simulate going up with 3 stops (from current floor) ", () => {
         const elevator = new Elevator();
@@ -410,7 +407,7 @@ describe("Elevator", () => {
         expect(elevator.routes).toHaveLength(0);
         expect(elevator.status).toEqual("IDLE" as ElevatorStatus);
 
-        elevator.pickup(7,9);
+        elevator.pickup(7, 9);
 
         expect(elevator.routes).toHaveLength(2);
         expect(elevator.routes[0].stops).toEqual([7]);

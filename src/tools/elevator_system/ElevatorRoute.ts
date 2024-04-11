@@ -1,8 +1,8 @@
 // noinspection JSUnusedLocalSymbols
 
-import {ElevatorMoveDirection} from "./@types.ts";
-import {ElevatorCannotMoveThereError} from "./Errors/ElevatorCannotMoveThereError.ts";
-import {ElevatorIsCurrentlyAtThisFloorError} from "./Errors/ElevatorIsCurrentlyAtThisFloorError.ts";
+import { ElevatorMoveDirection } from "./@types.ts";
+import { ElevatorCannotMoveThereError } from "./Errors/ElevatorCannotMoveThereError.ts";
+import { ElevatorIsCurrentlyAtThisFloorError } from "./Errors/ElevatorIsCurrentlyAtThisFloorError.ts";
 
 export class StopsCollection extends Array<number> {
     get asArray(): number[] {
@@ -56,7 +56,7 @@ export class ElevatorRoute {
         // If the elevator is in direct connection mode, it can go to any floor, but only to the ONE floor
         if (this.directConnection) return this.stops.length === 0;
 
-        return this.direction === "UP" ? this.currentFloor < floor : this.currentFloor > floor
+        return this.direction === "UP" ? this.currentFloor < floor : this.currentFloor > floor;
     }
 
     public addStop(floor: number): void {

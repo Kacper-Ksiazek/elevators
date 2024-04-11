@@ -1,6 +1,7 @@
-import {ElevatorRoute} from "./ElevatorRoute.ts";
-import {ElevatorMoveDirection, ElevatorStatus} from "./@types.ts";
-import {ElevatorCannotMoveThereError} from "./Errors/ElevatorCannotMoveThereError.ts";
+import { ElevatorRoute } from "@Elevator/ElevatorRoute.ts";
+import { ElevatorCannotMoveThereError } from "@Elevator/Errors/ElevatorCannotMoveThereError.ts";
+
+import type { ElevatorMoveDirection, ElevatorStatus } from "./@types.ts";
 
 export class Elevator {
     /** Elevator has stopped at a floor in order to pick up or drop off passengers */
@@ -31,19 +32,19 @@ export class Elevator {
 
     /** Request the elevator to pick up a person from and to specific floors */
     public pickup(startFloor: number, destinationFloor: number) {
-        if (startFloor === this._currentFloor) return this.pickupFromCurrentFloor(destinationFloor);
+        if (startFloor === this._currentFloor)
+            return this.pickupFromCurrentFloor(destinationFloor);
 
         // Otherwise, find the one that can fit the floor
-        const direction: ElevatorMoveDirection = startFloor < destinationFloor ? "UP" : "DOWN";
+        const direction: ElevatorMoveDirection =
+            startFloor < destinationFloor ? "UP" : "DOWN";
 
         try {
             this.addElevatorStop(startFloor, direction);
             this.addElevatorStop(destinationFloor, direction);
         } catch (e) {
             if (e instanceof ElevatorCannotMoveThereError) {
-                this.routes.push(
-                    this.createDirectRouteToFloor(startFloor)
-                )
+                this.routes.push(this.createDirectRouteToFloor(startFloor));
 
                 this.addElevatorStop(destinationFloor, direction);
             } else throw e;
@@ -52,7 +53,8 @@ export class Elevator {
 
     /** Request the elevator to pick up a person from the current floor to a specific floor */
     public pickupFromCurrentFloor(destinationFloor: number) {
-        const direction: ElevatorMoveDirection = this._currentFloor < destinationFloor ? "UP" : "DOWN";
+        const direction: ElevatorMoveDirection =
+            this._currentFloor < destinationFloor ? "UP" : "DOWN";
 
         this.addElevatorStop(destinationFloor, direction);
     }
@@ -63,12 +65,11 @@ export class Elevator {
 
         // The stop lasts for 1 simulation step, so if the elevator has been paused in the previous step, resume
         if (this._isAtPause) return this.unpause();
-
         // If the elevator is not paused, move it one level closer to the next stop
         else this.processCurrentRoute();
 
         // If the previous step has finished the current route, delete it and proceed to the next one if there is any
-        if (this.currentRoute.stops.length === 0) this.finishCurrentRoute()
+        if (this.currentRoute.stops.length === 0) this.finishCurrentRoute();
 
         return;
     }
@@ -97,18 +98,21 @@ export class Elevator {
         if (firstFloorOfSubsequentRoute === this._currentFloor) return;
 
         // Send the elevator to the first floor of the subsequent route
-        if(
-            (subsequentRoute.direction === "UP" && firstFloorOfSubsequentRoute < this._currentFloor) ||
-            (subsequentRoute.direction === "DOWN" && firstFloorOfSubsequentRoute > this._currentFloor)
+        if (
+            (subsequentRoute.direction === "UP" &&
+                firstFloorOfSubsequentRoute < this._currentFloor) ||
+            (subsequentRoute.direction === "DOWN" &&
+                firstFloorOfSubsequentRoute > this._currentFloor)
         ) {
             this.routes.unshift(
                 this.createDirectRouteToFloor(firstFloorOfSubsequentRoute)
-            )
+            );
         }
     }
 
     private createDirectRouteToFloor(floor: number): ElevatorRoute {
-        const directionTowardsFirstFloorOfSubsequentRoute: ElevatorMoveDirection = this._currentFloor < floor ? "UP" : "DOWN";
+        const directionTowardsFirstFloorOfSubsequentRoute: ElevatorMoveDirection =
+            this._currentFloor < floor ? "UP" : "DOWN";
 
         const directConnection = new ElevatorRoute(
             this._currentFloor,
@@ -121,9 +125,12 @@ export class Elevator {
     }
 
     private processCurrentRoute() {
-        const {currentRoute} = this;
+        const { currentRoute } = this;
         // Otherwise, move the elevator one level closer to the next stop
-        this._currentFloor = currentRoute.direction === "UP" ? this._currentFloor + 1 : this._currentFloor - 1;
+        this._currentFloor =
+            currentRoute.direction === "UP"
+                ? this._currentFloor + 1
+                : this._currentFloor - 1;
         currentRoute.currentFloor = this._currentFloor;
 
         // If the elevator has reached the next stop, remove it from the route and pause
@@ -145,7 +152,8 @@ export class Elevator {
 
         // Create a new route
         const route = new ElevatorRoute(
-            this.routes.length === 0 ? this._currentFloor : "ADAPT", direction
+            this.routes.length === 0 ? this._currentFloor : "ADAPT",
+            direction
         );
         route.addStop(floor);
         this.routes.push(route);

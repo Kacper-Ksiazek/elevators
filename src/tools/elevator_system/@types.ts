@@ -9,7 +9,7 @@ export type ElevatorStatus = `MOVING_${ElevatorMoveDirection}` | "STOPPED_AT_FLO
 /** Interface describing a request for an elevator */
 export interface ElevatorRequest {
     elevatorID: ElevatorID;
-    currentFloor: number;
+    startingFloor: number;
     destinationFloor: number;
 }
 
