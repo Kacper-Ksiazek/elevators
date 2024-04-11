@@ -2,6 +2,7 @@ import { ElevatorRoute } from "@Elevator/ElevatorRoute.ts";
 import { ElevatorCannotMoveThereError } from "@Elevator/Errors/ElevatorCannotMoveThereError.ts";
 
 import type { ElevatorMoveDirection, ElevatorStatus } from "./@types.ts";
+import { ProxyStops } from "@Elevator/ProxyStops.ts";
 
 export class Elevator {
     /** Elevator has stopped at a floor in order to pick up or drop off passengers */
@@ -9,6 +10,7 @@ export class Elevator {
 
     /** All routes the elevator has to take in order */
     public routes: ElevatorRoute[] = [];
+    public proxies: ProxyStops = new ProxyStops();
 
     /** The status of the elevator describing its current state and direction of movement */
     get status(): ElevatorStatus {
@@ -41,25 +43,27 @@ export class Elevator {
 
         try {
             this.addElevatorStop(startFloor, direction);
-            this.addElevatorStop(destinationFloor, direction);
         } catch (e) {
             if (e instanceof ElevatorCannotMoveThereError) {
                 this.routes.push(this.createDirectRouteToFloor(startFloor));
-
-                this.addElevatorStop(destinationFloor, direction);
-            } else throw e;
+            }
+            //
+            else throw e;
         }
+
+        this.proxies.addProxyForStop(startFloor, destinationFloor);
     }
 
     /** Request the elevator to pick up a person from the current floor to a specific floor */
-    public pickupFromCurrentFloor(destinationFloor: number) {
-        if(this.status === "MOVING_UP" || this.status === "MOVING_DOWN") this.pause();
+    public pickupFromCurrentFloor(destinationFloor: number | number []) {
+        if (this.status === "MOVING_UP" || this.status === "MOVING_DOWN") this.pause();
 
-        const direction: ElevatorMoveDirection =
-            this._currentFloor < destinationFloor ? "UP" : "DOWN";
+        (Array.isArray(destinationFloor) ? destinationFloor : [destinationFloor]).forEach((floor) => {
+            const direction: ElevatorMoveDirection =
+                this._currentFloor < floor ? "UP" : "DOWN";
 
-        this.addElevatorStop(destinationFloor, direction);
-
+            this.addElevatorStop(floor, direction);
+        });
 
     }
 
@@ -142,7 +146,13 @@ export class Elevator {
 
         // If the elevator has reached the next stop, remove it from the route and pause
         if (this._currentFloor === currentRoute.stops[0]) {
-            currentRoute.stops.shift();
+            const removedFloor = currentRoute.stops.shift() as number;
+
+            // If currently reached floor is a proxy, add all connected floors to the route
+            this.proxies.getConnectedFloors(removedFloor).forEach((floor) => {
+                this.addElevatorStop(floor, this._currentFloor < floor ? "UP" : "DOWN");
+            });
+
             this.pause();
         }
         return;

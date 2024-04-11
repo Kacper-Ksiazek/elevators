@@ -10,17 +10,6 @@ function printRoutes(routes: ElevatorRoute[]) {
     });
 }
 
-function assertElevatorPath(elevator: Elevator, elevatorPath: [number, ElevatorStatus?][]) {
-    elevatorPath.forEach(([floor, elevatorStatus]) => {
-        expect(elevator.currentFloor).toEqual(floor);
-        if (elevatorStatus) expect(elevator.status).toEqual(elevatorStatus);
-
-        elevator.makeSimulationMove();
-    });
-
-
-}
-
 test("By default elevator should be IDLE", () => {
     const elevator = new Elevator();
     expect(elevator.status).toEqual("IDLE");
@@ -54,9 +43,7 @@ test("Simulate going up with 1 stop (from current floor)", () => {
 test("Simulate going up with 3 stops (from current floor) ", () => {
     const elevator = new Elevator();
 
-    elevator.pickupFromCurrentFloor(3);
-    elevator.pickupFromCurrentFloor(5);
-    elevator.pickupFromCurrentFloor(10);
+    elevator.pickupFromCurrentFloor([3, 5, 10]);
 
     expect(elevator.status).toEqual("MOVING_UP" as ElevatorStatus);
 
@@ -105,16 +92,21 @@ test("Simulate requesting an elevator from the floor in a current direction ( UP
     expect(elevator.status).toEqual("IDLE" as ElevatorStatus);
 
     elevator.pickup(2, 5);
-    expect(elevator.routes[0].stops).toEqual([2, 5]);
+
+    expect(elevator.routes[0].stops).toEqual([2]);
     expect(elevator.routes).toHaveLength(1);
     expect(elevator.status).toEqual("MOVING_UP" as ElevatorStatus);
     expect(elevator.currentFloor).toEqual(0);
+    expect(elevator.proxies.getConnectedFloors(2, false)).toEqual([5]);
 
     elevator.makeSimulationMove(); // floor 1
     elevator.makeSimulationMove(); // floor 2
 
     expect(elevator.currentFloor).toEqual(2);
     expect(elevator.status).toEqual("STOPPED_AT_FLOOR" as ElevatorStatus);
+    expect(elevator.proxies.getConnectedFloors(2)).toEqual([]);
+    expect(elevator.routes[0].stops).toEqual([5]);
+    expect(elevator.routes).toHaveLength(1);
 
     elevator.makeSimulationMove(); // unpause, still at floor 2
     expect(elevator.currentFloor).toEqual(2);
@@ -138,16 +130,20 @@ test("Simulate requesting an elevator from the floor in a current direction ( DO
     expect(elevator.status).toEqual("IDLE" as ElevatorStatus);
 
     elevator.pickup(8, 5);
-    expect(elevator.routes[0].stops).toEqual([8, 5]);
+
+    expect(elevator.routes[0].stops).toEqual([8]);
     expect(elevator.routes).toHaveLength(1);
     expect(elevator.status).toEqual("MOVING_DOWN" as ElevatorStatus);
     expect(elevator.currentFloor).toEqual(10);
+    expect(elevator.proxies.getConnectedFloors(8, false)).toEqual([5]);
 
     elevator.makeSimulationMove(); // floor 9
     elevator.makeSimulationMove(); // floor 8
 
     expect(elevator.currentFloor).toEqual(8);
     expect(elevator.status).toEqual("STOPPED_AT_FLOOR" as ElevatorStatus);
+    expect(elevator.proxies.getConnectedFloors(8)).toEqual([]);
+    expect(elevator.routes[0].stops).toEqual([5]);
 
     elevator.makeSimulationMove(); // unpause, still at floor 8
     expect(elevator.currentFloor).toEqual(8);
@@ -175,13 +171,11 @@ describe("Request an elevator from the floor in opposite direction", () => {
 
         elevator.pickup(3, 1);
 
-        expect(elevator.routes).toHaveLength(2);
+        expect(elevator.routes).toHaveLength(1);
 
         expect(elevator.routes[0].stops).toEqual([3]);
         expect(elevator.routes[0].direction).toEqual("UP" as ElevatorMoveDirection);
-
-        expect(elevator.routes[1].stops).toEqual([1]);
-        expect(elevator.routes[1].direction).toEqual("DOWN" as ElevatorMoveDirection);
+        expect(elevator.proxies.getConnectedFloors(3, false)).toEqual([1]);
 
         expect(elevator.currentFloor).toEqual(0);
         expect(elevator.status).toEqual("MOVING_UP" as ElevatorStatus);
@@ -195,6 +189,7 @@ describe("Request an elevator from the floor in opposite direction", () => {
         expect(elevator.routes).toHaveLength(1);
 
         elevator.makeSimulationMove(); // still at floor 3
+
         expect(elevator.currentFloor).toEqual(3);
         expect(elevator.status).toEqual("MOVING_DOWN" as ElevatorStatus);
 
@@ -217,12 +212,10 @@ describe("Request an elevator from the floor in opposite direction", () => {
 
         elevator.pickup(7, 9);
 
-        expect(elevator.routes).toHaveLength(2);
+        expect(elevator.routes).toHaveLength(1);
         expect(elevator.routes[0].stops).toEqual([7]);
         expect(elevator.routes[0].direction).toEqual("DOWN" as ElevatorMoveDirection);
-
-        expect(elevator.routes[1].stops).toEqual([9]);
-        expect(elevator.routes[1].direction).toEqual("UP" as ElevatorMoveDirection);
+        expect(elevator.proxies.getConnectedFloors(7, false)).toEqual([9]);
 
         expect(elevator.currentFloor).toEqual(10);
         expect(elevator.status).toEqual("MOVING_DOWN" as ElevatorStatus);
@@ -260,8 +253,22 @@ describe("Request an elevator from the floor in opposite direction", () => {
         expect(elevator.routes[0].stops).toEqual([5]);
         expect(elevator.routes[0].direction).toEqual("DOWN");
 
-        expect(elevator.routes[1].stops).toEqual([6, 10]);
+        expect(elevator.routes[1].stops).toEqual([6]);
         expect(elevator.routes[1].direction).toEqual("UP");
+
+        expect(elevator.proxies.getConnectedFloors(5,false)).toEqual([10]);
+        expect(elevator.proxies.getConnectedFloors(6, false)).toEqual([10]);
+
+        elevator.makeSimulationMove(); // floor 6
+        elevator.makeSimulationMove(); // floor 5
+
+        expect(elevator.currentFloor).toEqual(5);
+        expect(elevator.status).toEqual("STOPPED_AT_FLOOR" as ElevatorStatus);
+        expect(elevator.proxies.getConnectedFloors(5)).toEqual([]);
+
+        expect(elevator.routes[0].stops).toEqual([6, 10]);
+
+
     });
 
     test("( 6 -> 10 ) and ( 5 -> 8 )", () => {
@@ -321,6 +328,7 @@ describe("Request an elevator from the floor in opposite direction", () => {
 
     test("Request picking up while already going up", () => {
         const elevator = new Elevator(0);
+
         elevator.pickupFromCurrentFloor(10);
 
         expect(elevator.status).toEqual("MOVING_UP" as ElevatorStatus);
@@ -334,8 +342,11 @@ describe("Request an elevator from the floor in opposite direction", () => {
         expect(elevator.status).toEqual("MOVING_UP" as ElevatorStatus);
 
         expect(elevator.routes[0].stops).toEqual([10]);
+
         elevator.pickup(5, 7);
-        expect(elevator.routes[0].stops).toEqual([5, 7, 10]);
+
+        expect(elevator.routes[0].stops).toEqual([5, 10]);
+        expect(elevator.proxies.getConnectedFloors(5, false)).toEqual([7]);
     });
 
     test("Request picking up while already going down", () => {
@@ -353,7 +364,8 @@ describe("Request an elevator from the floor in opposite direction", () => {
 
         expect(elevator.routes[0].stops).toEqual([0]);
         elevator.pickup(5, 3);
-        expect(elevator.routes[0].stops).toEqual([5, 3, 0]);
+        expect(elevator.routes[0].stops).toEqual([5, 0]);
+        expect(elevator.proxies.getConnectedFloors(5, false)).toEqual([3]);
     });
 
     // TODO: Test how pickupFromCurrentFloor behave when elevator is in the move
@@ -361,30 +373,30 @@ describe("Request an elevator from the floor in opposite direction", () => {
         const elevator = new Elevator(5);
         elevator.pickupFromCurrentFloor(10);
 
-        expect(elevator.status).toEqual("MOVING_UP" as  ElevatorStatus);
+        expect(elevator.status).toEqual("MOVING_UP" as ElevatorStatus);
 
         elevator.makeSimulationMove();
         elevator.makeSimulationMove();
         elevator.makeSimulationMove();
 
-        expect(elevator.status).toEqual("MOVING_UP" as  ElevatorStatus);
-        expect(elevator.currentFloor).toEqual(8)
-        expect(elevator.routes[0].stops).toEqual([10])
+        expect(elevator.status).toEqual("MOVING_UP" as ElevatorStatus);
+        expect(elevator.currentFloor).toEqual(8);
+        expect(elevator.routes[0].stops).toEqual([10]);
 
         elevator.pickupFromCurrentFloor(20);
 
-        expect(elevator.status).toEqual("STOPPED_AT_FLOOR" as  ElevatorStatus);
-        expect(elevator.currentFloor).toEqual(8)
-        expect(elevator.routes[0].stops).toEqual([10, 20])
+        expect(elevator.status).toEqual("STOPPED_AT_FLOOR" as ElevatorStatus);
+        expect(elevator.currentFloor).toEqual(8);
+        expect(elevator.routes[0].stops).toEqual([10, 20]);
 
-        elevator.makeSimulationMove()
+        elevator.makeSimulationMove();
 
-        expect(elevator.status).toEqual("MOVING_UP" as  ElevatorStatus);
-        expect(elevator.currentFloor).toEqual(8)
-        elevator.makeSimulationMove()
+        expect(elevator.status).toEqual("MOVING_UP" as ElevatorStatus);
+        expect(elevator.currentFloor).toEqual(8);
+        elevator.makeSimulationMove();
 
-        expect(elevator.status).toEqual("MOVING_UP" as  ElevatorStatus);
-        expect(elevator.currentFloor).toEqual(9)
+        expect(elevator.status).toEqual("MOVING_UP" as ElevatorStatus);
+        expect(elevator.currentFloor).toEqual(9);
     });
 
     // TODO: Test picking up from floor 3 to 8 while the elevator is currently at 4 and goes to 7
