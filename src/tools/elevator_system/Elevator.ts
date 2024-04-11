@@ -53,10 +53,14 @@ export class Elevator {
 
     /** Request the elevator to pick up a person from the current floor to a specific floor */
     public pickupFromCurrentFloor(destinationFloor: number) {
+        if(this.status === "MOVING_UP" || this.status === "MOVING_DOWN") this.pause();
+
         const direction: ElevatorMoveDirection =
             this._currentFloor < destinationFloor ? "UP" : "DOWN";
 
         this.addElevatorStop(destinationFloor, direction);
+
+
     }
 
     /** Perform a simulation step of the elevator system */
@@ -94,8 +98,11 @@ export class Elevator {
         const subsequentRoute: ElevatorRoute = this.routes[0];
         const firstFloorOfSubsequentRoute: number = subsequentRoute.stops[0];
 
-        // if (firstFloorOfSubsequentRoute === this._currentFloor) return this.unpause();
-        if (firstFloorOfSubsequentRoute === this._currentFloor) return;
+        if (firstFloorOfSubsequentRoute === this._currentFloor) {
+            this.routes[0].stops.shift();
+            return;
+        }
+        // if (firstFloorOfSubsequentRoute === this._currentFloor) return;
 
         // Send the elevator to the first floor of the subsequent route
         if (
