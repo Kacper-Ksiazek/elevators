@@ -1,44 +1,16 @@
 // noinspection JSUnusedLocalSymbols
 
-import { ElevatorMoveDirection } from "./@types.ts";
-import { ElevatorCannotMoveThereError } from "./Errors/ElevatorCannotMoveThereError.ts";
-import { ElevatorIsCurrentlyAtThisFloorError } from "./Errors/ElevatorIsCurrentlyAtThisFloorError.ts";
+import { Stops } from "@Elevator/Stops.ts";
+import { ElevatorCannotMoveThereError } from "@Elevator/Errors/ElevatorCannotMoveThereError.ts";
+import { ElevatorIsCurrentlyAtThisFloorError } from "@Elevator/Errors/ElevatorIsCurrentlyAtThisFloorError.ts";
 
-export class StopsCollection extends Array<number> {
-    get asArray(): number[] {
-        return new Array(...this);
-    }
-
-    public insertWithOrder(value: number, order: "ASC" | "DESC"): void {
-        if (order === "ASC") {
-            this.insertInAscendingOrder(value);
-        } else {
-            this.insertInDescendingOrder(value);
-        }
-    }
-
-    private insertInAscendingOrder(value: number): void {
-        let index: number = 0;
-        while (this[index] < value) {
-            index++;
-        }
-        this.splice(index, 0, value);
-    }
-
-    private insertInDescendingOrder(value: number): void {
-        let index: number = 0;
-        while (this[index] > value) {
-            index++;
-        }
-        this.splice(index, 0, value);
-    }
-}
+import type { ElevatorMoveDirection } from "./@types.ts";
 
 type CurrentFloor = number | "ADAPT";
 
 export class ElevatorRoute {
     /** The array of floors the elevator is going to stop at in order */
-    public stops: StopsCollection;
+    public stops: Stops;
 
     get direction(): ElevatorMoveDirection {
         return this._direction;
@@ -48,7 +20,7 @@ export class ElevatorRoute {
                 private _direction: ElevatorMoveDirection,
                 private directConnection: boolean = false
     ) {
-        this.stops = new StopsCollection();
+        this.stops = new Stops();
     }
 
     public canFitInQueue(floor: number): boolean {

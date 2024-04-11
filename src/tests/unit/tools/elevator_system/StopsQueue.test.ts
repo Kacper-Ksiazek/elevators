@@ -1,7 +1,10 @@
-import { ElevatorRoute, StopsCollection } from "@Elevator/ElevatorRoute.ts";
-import { ElevatorCannotMoveThereError } from "@Elevator/Errors/ElevatorCannotMoveThereError.ts";
+import { Stops } from "@Elevator/Stops.ts";
 import { Elevator } from "@Elevator/Elevator.ts";
-import { ElevatorMoveDirection, ElevatorStatus } from "@Elevator/@types.ts";
+import { ElevatorRoute } from "@Elevator/ElevatorRoute.ts";
+import { ElevatorCannotMoveThereError } from "@Elevator/Errors/ElevatorCannotMoveThereError.ts";
+
+import type { ElevatorMoveDirection, ElevatorStatus } from "@Elevator/@types.ts";
+
 import {
     ElevatorIsCurrentlyAtThisFloorError
 } from "@Elevator/Errors/ElevatorIsCurrentlyAtThisFloorError.ts";
@@ -15,7 +18,7 @@ function printRoutes(routes: ElevatorRoute[]) {
 
 describe("StopsCollection:", () => {
     test("Insert in ascending order", () => {
-        const stops = new StopsCollection();
+        const stops = new Stops();
 
         stops.insertWithOrder(5, "ASC");
         stops.insertWithOrder(3, "ASC");
@@ -32,7 +35,7 @@ describe("StopsCollection:", () => {
     });
 
     test("Insert in descending order", () => {
-        const stops = new StopsCollection();
+        const stops = new Stops();
 
         stops.insertWithOrder(5, "DESC");
         stops.insertWithOrder(3, "DESC");
