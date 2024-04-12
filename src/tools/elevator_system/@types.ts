@@ -5,6 +5,21 @@ export type ElevatorMoveDirection = "UP" | "DOWN";
 
 export type ElevatorStatus = `MOVING_${ElevatorMoveDirection}` | "STOPPED_AT_FLOOR" | "IDLE";
 
+export interface ElevatorState {
+    elevatorID: ElevatorID;
+
+    /** The current floor the elevator is on */
+    currentFloor: number;
+
+    /** The status of the elevator */
+    status: ElevatorStatus;
+
+    /** The floors the elevator will stop at next */
+    nextStops: number[] | null;
+
+    /** In the form of "#RRGGBB" */
+    color: `#${string}`;
+}
 
 /** Interface describing a request for an elevator */
 export interface ElevatorRequest {
@@ -18,10 +33,10 @@ export interface ElevatorSystem {
     maxFloor: number;
 
     /** The number of elevators in the building */
-    elevatorCount: number;
+    elevatorsAmount: number;
 
     /** The current status of all elevators */
-    elevatorStatuses: Record<ElevatorID, ElevatorStatus>;
+    status: ElevatorState[];
 
     /** Request an elevator to pick up a person */
     requestElevator(request: ElevatorRequest): void;
