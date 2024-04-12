@@ -1,10 +1,10 @@
 import { elevatorSystemContext } from ".";
 import { ElevatorSystem } from "@Elevator/index.ts";
 import type { FunctionComponent, ReactNode } from "react";
+import { ElevatorSystemConfigToSave } from "@/components/InitialElevatorSystemConfig/@types.ts";
 
 interface ElevatorSystemContextProviderProps {
-    numberOfFloors: number;
-    numberOfElevators: number;
+    config: ElevatorSystemConfigToSave;
 
     children: ReactNode;
 }
@@ -13,8 +13,8 @@ const ElevatorSystemContextProvider: FunctionComponent<ElevatorSystemContextProv
     return (
         <elevatorSystemContext.Provider value={{
             system: new ElevatorSystem({
-                elevatorsAmount: props.numberOfElevators,
-                maxFloor: props.numberOfFloors
+                elevatorsAmount: props.config.numberOfElevators,
+                maxFloor: props.config.numberOfFloors
             })
         }}>
             {props.children}

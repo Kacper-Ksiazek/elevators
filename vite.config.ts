@@ -7,7 +7,7 @@ export default defineConfig({
     resolve: {
         alias: {
             "@": "/src",
-            "@Elevator": "/src/elevator"
+            "@Elevator": "/src/tools/elevator_system"
         }
     }
 });
