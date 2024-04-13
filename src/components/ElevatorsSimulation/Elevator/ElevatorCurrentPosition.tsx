@@ -8,23 +8,23 @@ const CurrentFloorIndicatorBase = styled("span", {
 })<{ color: ElevatorState["color"] }>(({ theme, ...props }) => ({
     position: "absolute",
     width: "100%",
-    transition: "bottom .5s",
     background: props.color,
-    zIndex: 1
+    zIndex: 1,
+    transition: "bottom .3s linear"
 }));
 
-interface CurrentFloorIndicatorProps extends Pick<ElevatorState, "currentFloor" | "color"> {
-};
+interface ElevatorCurrentPositionProps extends Pick<ElevatorState, "currentFloor" | "color"> {
+}
 
-const CurrentFloorIndicator: React.FunctionComponent<CurrentFloorIndicatorProps> = (props) => {
-    const { system } = useElevatorSystemContext();
+const ElevatorCurrentPosition: React.FunctionComponent<ElevatorCurrentPositionProps> = (props) => {
+    const { maxFloor } = useElevatorSystemContext();
 
     return (
         <CurrentFloorIndicatorBase color={props.color} sx={{
-            height: `calc(( 100% - ${system.maxFloor * 2}px)/ ${system.maxFloor + 1})`,
-            bottom: `calc(100% / ${system.maxFloor + 1} * ${props.currentFloor})`
+            height: `calc(( 100% - ${maxFloor * 2}px)/ ${maxFloor + 1})`,
+            bottom: `calc(100% / ${maxFloor + 1} * ${props.currentFloor})`
         }} />
     );
 };
 
-export default CurrentFloorIndicator;
+export default ElevatorCurrentPosition;

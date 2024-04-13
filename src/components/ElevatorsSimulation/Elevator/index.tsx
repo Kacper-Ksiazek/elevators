@@ -2,10 +2,11 @@ import React, { FunctionComponent, useMemo } from "react";
 import { Stack, styled, Typography } from "@mui/material";
 import { useElevatorSystemContext } from "@/hooks/useElevatorSystemContext.ts";
 import type { ElevatorState } from "@Elevator/@types.ts";
+import { getElevatorPositionMark, getFloorName } from "./utils";
 
 import MoveDirection from "./MoveDirection.tsx";
 import Floor from "./Floor.tsx";
-import CurrentFloorIndicator from "./CurrentFloorIndicator.tsx";
+import ElevatorCurrentPosition from "./ElevatorCurrentPosition.tsx";
 
 const ElevatorBase = styled("div")(({ theme }) => ({
     height: "100%",
@@ -31,24 +32,32 @@ interface ElevatorProps {
 }
 
 const Elevator: FunctionComponent<ElevatorProps> = (props) => {
-    const { system } = useElevatorSystemContext();
+    const { maxFloor, elevatorsAmount } = useElevatorSystemContext();
 
     const floors: number[] = useMemo<number[]>(() => {
         return [
-            ...Array.from({ length: system.maxFloor + 1 }, (_, i) => i)
+            ...Array.from({ length: maxFloor + 1 }, (_, i) => i)
         ].reverse();
-    }, [system.maxFloor]);
+    }, [maxFloor]);
 
     return (
-        <ElevatorBase sx={{ width: `calc(100% / ${system.elevatorsAmount})` }}>
+        <ElevatorBase sx={{ width: `calc(100% / ${elevatorsAmount})` }}>
             <MoveDirection status={props.data.status} />
 
             <Stack sx={{ flexGrow: 1, position: "relative", gap: "2px" }}>
-                <CurrentFloorIndicator {...props.data} />
+                <ElevatorCurrentPosition color={props.data.color} currentFloor={props.data.currentFloor} />
 
                 {floors.map((floor) => {
                     return (
-                        <Floor floorNumber={floor} key={floor} />
+                        <Floor key={floor}
+                               color={props.data.color}
+                               floorNumber={floor}
+                               mark={getElevatorPositionMark({
+                                   floor,
+                                   nextStops: props.data.nextStops,
+                                   elevatorCurrentFloor: props.data.currentFloor
+                               })}
+                        />
                     );
                 })}
             </Stack>
@@ -63,11 +72,12 @@ const Elevator: FunctionComponent<ElevatorProps> = (props) => {
                 </Typography>
 
                 <Typography variant="body2">
-                    Currently at: <strong>2nd floor</strong>
+                    Currently at: <strong>{getFloorName(props.data.currentFloor)}</strong>
                 </Typography>
 
                 <Typography variant="body2">
-                    Next stop: <strong>7th floor</strong>
+                    Next
+                    stop: <strong>{props.data.nextStops !== null ? getFloorName(props.data.nextStops[0]) : "-"}</strong>
                 </Typography>
             </Stack>
         </ElevatorBase>
