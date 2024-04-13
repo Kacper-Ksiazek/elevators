@@ -1,7 +1,7 @@
 import { styled } from "@mui/material";
 
 import type { FunctionComponent } from "react";
-import type { ElevatorStatus } from "@Elevator/@types.ts";
+import type { ElevatorState, ElevatorStatus } from "@Elevator/@types.ts";
 
 import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
@@ -11,20 +11,21 @@ const MoveDirectionBase = styled("div")(({ theme }) => ({
     height: "48px",
     marginBottom: "4px",
     ...theme.mixins.flex_center,
-    opacity: .5,
 
     svg: {
-        fontSize: "48px"
+        fontSize: "48px",
+        color: "inherit"
     }
 }));
 
 interface MoveDirectionProps {
     status: ElevatorStatus;
+    color: ElevatorState["color"];
 }
 
 const MoveDirection: FunctionComponent<MoveDirectionProps> = (props) => {
     return (
-        <MoveDirectionBase>
+        <MoveDirectionBase sx={{ color: props.color }}>
             {(() => {
                 switch (props.status) {
                     case "MOVING_UP":
@@ -35,7 +36,7 @@ const MoveDirection: FunctionComponent<MoveDirectionProps> = (props) => {
                         return <PauseRoundedIcon />;
                     default:
                         return <></>;
-                        // return <ArrowDownwardRoundedIcon />;
+                    // return <ArrowDownwardRoundedIcon />;
                 }
             })()}
         </MoveDirectionBase>

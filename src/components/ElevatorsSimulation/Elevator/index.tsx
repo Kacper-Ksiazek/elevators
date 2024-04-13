@@ -42,7 +42,10 @@ const Elevator: FunctionComponent<ElevatorProps> = (props) => {
 
     return (
         <ElevatorBase sx={{ width: `calc(100% / ${elevatorsAmount})` }}>
-            <MoveDirection status={props.data.status} />
+            <MoveDirection
+                status={props.data.status}
+                color={props.data.color}
+            />
 
             <Stack sx={{ flexGrow: 1, position: "relative", gap: "2px" }}>
                 <ElevatorCurrentPosition color={props.data.color} currentFloor={props.data.currentFloor} />
