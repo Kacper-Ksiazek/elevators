@@ -78,10 +78,15 @@ const Elevator: FunctionComponent<ElevatorProps> = (props) => {
                     Currently at: <strong>{getFloorName(props.data.currentFloor)}</strong>
                 </Typography>
 
-                <Typography variant="body2">
-                    Next
-                    stop: <strong>{props.data.nextStops !== null ? getFloorName(props.data.nextStops[0]) : "-"}</strong>
-                </Typography>
+                <Stack sx={{
+                    opacity: props.data.status === "IDLE" ? 0.3 : 1,
+                    transition: "opacity .2s"
+                }}>
+                    <Typography variant="body2">
+                        Next
+                        stop: <strong>{props.data.nextStops !== null ? getFloorName(props.data.nextStops[0]) : "-"}</strong>
+                    </Typography>
+                </Stack>
             </Stack>
         </ElevatorBase>
     );
