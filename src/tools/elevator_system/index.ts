@@ -37,7 +37,7 @@ export class ElevatorSystem implements IElevatorSystem {
         this._elevatorsAmount = elevatorsAmount;
 
         for (let i = 0; i < elevatorsAmount; i++) {
-            this.elevators[ElevatorSystem.generateElevatorID(i)] = new Elevator();
+            this.elevators[ElevatorSystem.generateElevatorID(i)] = new Elevator(0);
         }
     }
 

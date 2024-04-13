@@ -9,8 +9,15 @@ const ElevatorBase = styled("div")(({ theme }) => ({
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    gap: "2px",
     maxWidth: "240px",
+    position: "relative",
+
+    ".current-floor": {
+        position: "absolute",
+        width: "100%",
+        // opacity: .
+    },
+
 
     "div.floor": {
         flexGrow: 1,
@@ -46,15 +53,23 @@ const Elevator: FunctionComponent<ElevatorProps> = (props) => {
         <ElevatorBase sx={{ width: `calc(100% / ${system.elevatorsAmount})` }}>
             <MoveDirection status={props.data.status} />
 
-            {floors.map((floor, index) => {
-                return (
-                    <div key={index} className="floor">
-                        {floor === 0 ? "GROUND" : floor}
-                    </div>
-                );
-            })}
+            <Stack sx={{ flexGrow: 1, position: "relative", gap: "2px" }}>
+                <span className="current-floor" style={{
+                    background: props.data.color,
+                    height: `calc(( 100% - ${system.maxFloor * 2}px)/ ${system.maxFloor + 1})`,
+                    bottom: `calc(100% / ${system.maxFloor + 1} * ${props.data.currentFloor})`
+                }} />
 
-            <Stack>
+                {floors.map((floor, index) => {
+                    return (
+                        <div key={index} className="floor">
+                            {floor === 0 ? "GROUND" : floor}
+                        </div>
+                    );
+                })}
+            </Stack>
+
+            <Stack sx={{ mt: "8px" }}>
                 <Typography variant="h6">
                     Elevator {props.elevatorOrderNumber}
                 </Typography>
