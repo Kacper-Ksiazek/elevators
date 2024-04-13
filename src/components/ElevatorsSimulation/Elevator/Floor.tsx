@@ -21,8 +21,6 @@ const FloorBase = styled("div", {
     [`&.${"active" as ElevatorPositionMark}`]: {
         color: "#fff",
         textWeight: "bold",
-        fontSize: "18px",
-        background: alpha(props.color, .7)
     },
 
     [`&.${"goes_through" as ElevatorPositionMark}`]: {

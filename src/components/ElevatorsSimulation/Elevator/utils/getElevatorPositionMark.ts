@@ -15,11 +15,12 @@ interface GetElevatorPositionMarkParams {
 export function getElevatorPositionMark(params: GetElevatorPositionMarkParams): ElevatorPositionMark {
     const { floor, elevatorCurrentFloor, nextStops } = params;
 
-    // Ensure that the elevator is moving
-    if (nextStops === null || nextStops.length === 0) return "none";
-
     // Check if the floor is the current floor
-    else if (nextStops[0] === elevatorCurrentFloor) return "active";
+    if (floor === elevatorCurrentFloor) return "active";
+
+    // Ensure that the elevator is moving
+    else if (nextStops === null || nextStops.length === 0) return "none";
+
 
     // Check if the floor is one of the next stops
     else if (nextStops.includes(floor)) return "stops_at";

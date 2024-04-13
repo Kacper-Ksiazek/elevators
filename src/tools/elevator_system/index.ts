@@ -9,21 +9,21 @@ interface ElevatorSystemConstructorParams {
 
 const COLORS: Record<ElevatorID, ElevatorState["color"]> = {
     "elevator-0": "#FF5733",
-    "elevator-1": "#33FF57",
+    "elevator-1": "#48A9A6",
     "elevator-2": "#5733FF",
     "elevator-3": "#FF33A1",
     "elevator-4": "#33A1FF",
     "elevator-5": "#FFA500",
     "elevator-6": "#FF338B",
-    "elevator-7": "#00FFFF",
+    "elevator-7": "#274690",
     "elevator-8": "#006400",
-    "elevator-9": "#FFD700",
+    "elevator-9": "#C19149",
     "elevator-10": "#8B4513",
-    "elevator-11": "#A1FF33",
+    "elevator-11": "#0077B6",
     "elevator-12": "#8A2BE2",
-    "elevator-13": "#338BFF",
-    "elevator-14": "#4B0082",
-    "elevator-15": "#8BFF33"
+    "elevator-13": "#ECA72C",
+    "elevator-14": "#A05C54",
+    "elevator-15": "#1DD79D"
 };
 
 export class ElevatorSystem implements IElevatorSystem {
