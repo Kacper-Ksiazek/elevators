@@ -1,6 +1,9 @@
+import { mixins } from "./mixins.ts";
 import { createTheme } from "@mui/material";
 
 export const theme = createTheme({
+        mixins,
+
         palette: {
             primary: {
                 main: "#DC1840"
@@ -17,7 +20,18 @@ export const theme = createTheme({
             fontFamily: "Lato, sans-serif",
             h2: {
                 fontWeight: 700
+            },
+            h6: {
+                fontSize: "24px",
+                fontWeight: 700
+            },
+            body2: {
+                margin: 0
+            },
+            body1: {
+                margin: 0
             }
+
         },
 
         components: {
@@ -44,10 +58,11 @@ export const theme = createTheme({
                         height: "50px",
                         boxShadow: "none",
                         textTransform: "none",
-                        fontSize: "16px",
+                        fontSize: "16px"
                     }
                 }
             }
         }
+
     })
 ;
