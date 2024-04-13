@@ -1,9 +1,11 @@
 import React, { FunctionComponent, useMemo } from "react";
-import { alpha, Stack, styled, Typography } from "@mui/material";
+import { Stack, styled, Typography } from "@mui/material";
 import { useElevatorSystemContext } from "@/hooks/useElevatorSystemContext.ts";
 import type { ElevatorState } from "@Elevator/@types.ts";
 
 import MoveDirection from "./MoveDirection.tsx";
+import Floor from "./Floor.tsx";
+import CurrentFloorIndicator from "./CurrentFloorIndicator.tsx";
 
 const ElevatorBase = styled("div")(({ theme }) => ({
     height: "100%",
@@ -14,19 +16,7 @@ const ElevatorBase = styled("div")(({ theme }) => ({
 
     ".current-floor": {
         position: "absolute",
-        width: "100%",
-        // opacity: .
-    },
-
-
-    "div.floor": {
-        flexGrow: 1,
-        background: alpha("#000", .05),
-        color: alpha("#000", .5),
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
+        width: "100%"
     },
 
     "& > *": {
@@ -54,17 +44,11 @@ const Elevator: FunctionComponent<ElevatorProps> = (props) => {
             <MoveDirection status={props.data.status} />
 
             <Stack sx={{ flexGrow: 1, position: "relative", gap: "2px" }}>
-                <span className="current-floor" style={{
-                    background: props.data.color,
-                    height: `calc(( 100% - ${system.maxFloor * 2}px)/ ${system.maxFloor + 1})`,
-                    bottom: `calc(100% / ${system.maxFloor + 1} * ${props.data.currentFloor})`
-                }} />
+                <CurrentFloorIndicator {...props.data} />
 
-                {floors.map((floor, index) => {
+                {floors.map((floor) => {
                     return (
-                        <div key={index} className="floor">
-                            {floor === 0 ? "GROUND" : floor}
-                        </div>
+                        <Floor floorNumber={floor} key={floor} />
                     );
                 })}
             </Stack>

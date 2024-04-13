@@ -6,6 +6,7 @@ import type { ElevatorSystemConfigToSave } from "@/components/InitialElevatorSys
 import ElevatorsSimulation from "@/components/ElevatorsSimulation";
 import InitialElevatorSystemConfig from "@/components/InitialElevatorSystemConfig";
 import ElevatorSystemContextProvider from "@/contexts/elevatorSystemContext/Provider.tsx";
+import Fade from "@mui/material/Fade";
 
 function App() {
     const [config, setConfig] = useState<ElevatorSystemConfigToSave | null>(null);
@@ -21,11 +22,13 @@ function App() {
     );
 
     return (
-        <main>
-            <ElevatorSystemContextProvider config={config}>
-                <ElevatorsSimulation />
-            </ElevatorSystemContextProvider>
-        </main>
+        <Fade in={true}>
+            <main>
+                <ElevatorSystemContextProvider config={config}>
+                    <ElevatorsSimulation />
+                </ElevatorSystemContextProvider>
+            </main>
+        </Fade>
     );
 }
 
