@@ -1,8 +1,9 @@
-import { alpha, styled } from "@mui/material";
+import { alpha, styled, Tooltip } from "@mui/material";
 import { ElevatorPositionMark } from "@/components/ElevatorsSimulation/Elevator/types.ts";
 
 import type { FunctionComponent } from "react";
 import type { ElevatorState } from "@Elevator/@types.ts";
+import { getFloorName } from "@/components/ElevatorsSimulation/Elevator/utils";
 
 const FloorBase = styled("div", {
     shouldForwardProp: (prop) => prop !== "color"
@@ -20,7 +21,7 @@ const FloorBase = styled("div", {
 
     [`&.${"active" as ElevatorPositionMark}`]: {
         color: "#fff",
-        textWeight: "bold",
+        textWeight: "bold"
     },
 
     [`&.${"goes_through" as ElevatorPositionMark}`]: {
@@ -43,11 +44,26 @@ interface FloorProps {
     mark: ElevatorPositionMark;
 }
 
+function generateTooltipText(floorNumber: number, mark: ElevatorPositionMark): string {
+    switch (mark) {
+        case "active":
+            return `Elevator is currently at ${getFloorName(floorNumber)} floor`;
+        case "stops_at":
+            return `Elevator is stopping at ${getFloorName(floorNumber)} floor`;
+        case "goes_through":
+            return `Elevator is going through ${getFloorName(floorNumber)} floor`;
+        default:
+            return "";
+    }
+}
+
 const Floor: FunctionComponent<FloorProps> = (props) => {
     return (
-        <FloorBase className={props.mark} color={props.color}>
-            {props.floorNumber === 0 ? "GROUND" : props.floorNumber}
-        </FloorBase>
+        <Tooltip title={generateTooltipText(props.floorNumber, props.mark)} placement="top">
+            <FloorBase className={props.mark} color={props.color}>
+                {props.floorNumber === 0 ? "GROUND" : props.floorNumber}
+            </FloorBase>
+        </Tooltip>
     );
 };
 

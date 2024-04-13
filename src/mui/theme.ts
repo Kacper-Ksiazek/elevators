@@ -1,5 +1,5 @@
 import { mixins } from "./mixins.ts";
-import { createTheme } from "@mui/material";
+import { alpha, createTheme } from "@mui/material";
 
 export const theme = createTheme({
         mixins,
@@ -59,6 +59,19 @@ export const theme = createTheme({
                         boxShadow: "none",
                         textTransform: "none",
                         fontSize: "16px"
+                    }
+                }
+            },
+            MuiTooltip: {
+                styleOverrides: {
+                    tooltip: {
+                        fontSize: "16px",
+                        fontWeight: 400,
+                        background: alpha("#000", 0.75),
+                        padding: "4px 16px",
+                        cursor: "default",
+                        borderRadius: "3px",
+                        userSelect: "none",
                     }
                 }
             }
