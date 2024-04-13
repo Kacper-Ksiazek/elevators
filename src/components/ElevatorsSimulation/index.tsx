@@ -1,23 +1,25 @@
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { useElevatorSystemContext } from "@/hooks/useElevatorSystemContext.ts";
 import Elevator from "@/components/ElevatorsSimulation/Elevator";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
+import { generateMockElevatorRoute } from "./utils";
 
 const ElevatorsSimulation: FunctionComponent = () => {
     const system = useElevatorSystemContext();
 
     function onMockClick() {
-        system.requestElevator({
-            elevatorID: `elevator-1`,
-            startingFloor: 3,
-            destinationFloor: 0
+        system.status.forEach((elevator) => {
+            generateMockElevatorRoute({
+                elevatorID: elevator.elevatorID,
+                maxFloor: system.maxFloor,
+                requestElevator: system.requestElevator
+            });
         });
     }
 
     function onSimulationStepClick() {
         system.doSimulationStep();
-        // setRefreshKey(val => val + 1);
     }
 
     return (
