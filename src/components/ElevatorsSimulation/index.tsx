@@ -1,10 +1,13 @@
-import { FunctionComponent } from "react";
+// Tools and hooks
+import { toast } from "react-toastify";
+import { generateMockElevatorRoute } from "./utils";
 import { useElevatorSystemContext } from "@/hooks/useElevatorSystemContext.ts";
-import Elevator from "@/components/ElevatorsSimulation/Elevator";
+// Types
+import type { FunctionComponent } from "react";
+// Components
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
-import { generateMockElevatorRoute } from "./utils";
-import { toast } from "react-toastify";
+import Elevator from "@/components/ElevatorsSimulation/Elevator";
 
 const ElevatorsSimulation: FunctionComponent = () => {
     const system = useElevatorSystemContext();

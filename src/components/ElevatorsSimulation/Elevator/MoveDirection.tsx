@@ -29,16 +29,25 @@ const MoveDirection: FunctionComponent<MoveDirectionProps> = (props) => {
             {(() => {
                 switch (props.status) {
                     case "MOVING_UP":
-                        return <ArrowUpwardRoundedIcon />;
+                        return <>
+                            <ArrowUpwardRoundedIcon />
+                            <span>Moving up</span>
+                        </>;
                     case "MOVING_DOWN":
-                        return <ArrowDownwardRoundedIcon />;
+                        return <>
+                            <ArrowDownwardRoundedIcon />
+                            <span>Moving down</span>
+                        </>;
                     case "STOPPED_AT_FLOOR":
-                        return <PauseRoundedIcon />;
+                        return <>
+                            <PauseRoundedIcon />
+                            <span>Stopped at floor</span>
+                        </>;
                     default:
                         return <></>;
-                    // return <ArrowDownwardRoundedIcon />;
                 }
             })()}
+
         </MoveDirectionBase>
     );
 };
