@@ -93,7 +93,7 @@ const ElevatorsSimulation: FunctionComponent = () => {
                 </Button>
 
                 <Button
-                    disabled={system.status.every(el => el.status === "IDLE")}
+                    disabled={!system.simulationCanProceed}
                     onClick={onSimulationStepClick}
                     tooltip="Make a simulation step"
                 >
@@ -102,7 +102,7 @@ const ElevatorsSimulation: FunctionComponent = () => {
                 </Button>
 
                 <Button
-                    disabled={system.status.every(el => el.status === "IDLE")}
+                    disabled={!system.simulationCanProceed}
                     onClick={onSimulationStepClick}
                     tooltip="Play the simulation"
                 >

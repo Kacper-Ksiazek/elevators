@@ -41,6 +41,10 @@ export class ElevatorSystem implements IElevatorSystem {
         }
     }
 
+    get simulationCanProceed(): boolean {
+        return Object.values(this.elevators).some((elevator) => elevator.status !== "IDLE");
+    }
+
     get status(): IElevatorSystem["status"] {
         return Object.entries(this.elevators).map(([_elevatorID, elevator]) => {
             const elevatorID: ElevatorID = _elevatorID as ElevatorID;

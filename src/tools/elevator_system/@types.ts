@@ -35,6 +35,9 @@ export interface ElevatorSystem {
     /** The number of elevators in the building */
     elevatorsAmount: number;
 
+    /** Whether the simulation can proceed meaning there is an elevator that can move */
+    simulationCanProceed: boolean;
+
     /** The current status of all elevators */
     status: ElevatorState[];
 

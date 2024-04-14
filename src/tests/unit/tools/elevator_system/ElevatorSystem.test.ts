@@ -7,7 +7,7 @@ test("Create an instance", () => {
         elevatorsAmount: 3
     });
 
-    expect(elevatorSystem).toBe(ElevatorSystem);
+    expect(elevatorSystem).toBeInstanceOf(ElevatorSystem);
 
     expect(elevatorSystem.maxFloor).toEqual(10);
     expect(elevatorSystem.elevatorsAmount).toEqual(3);
@@ -20,6 +20,32 @@ test("Create an instance", () => {
         expect(elevator.nextStops).toBeNull();
         expect(elevator.color).toMatch(/^#[0-9A-F]{6}$/);
     });
+});
+
+test(".simulationCanProceed() returns false when all elevators are idle", () => {
+    const elevatorSystem = new ElevatorSystem({
+        maxFloor: 10,
+        elevatorsAmount: 3
+    });
+
+    expect(elevatorSystem.simulationCanProceed).toEqual(false);
+
+    elevatorSystem.requestElevator({
+        elevatorID: "elevator-0",
+        startingFloor: 0,
+        destinationFloor: 2
+    });
+
+    expect(elevatorSystem.simulationCanProceed).toEqual(true);
+
+    elevatorSystem.doSimulationStep();
+    expect(elevatorSystem.simulationCanProceed).toEqual(true);
+
+    elevatorSystem.doSimulationStep();
+    expect(elevatorSystem.simulationCanProceed).toEqual(true);
+
+    elevatorSystem.doSimulationStep();
+    expect(elevatorSystem.simulationCanProceed).toEqual(false);
 });
 
 test("Pickup three different elevators", () => {
