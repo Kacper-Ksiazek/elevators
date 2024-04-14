@@ -32,15 +32,17 @@ interface ButtonProps extends PropsWithChildren {
 const Button: FunctionComponent<ButtonProps> = (props) => {
     return (
         <Tooltip title={props.tooltip}>
-            <ButtonBase
-                variant="contained"
-                color={props.color ?? "secondary"}
-                onClick={props.onClick}
-                disabled={props.disabled}
-                sx={props.sx}
-            >
-                {props.children}
-            </ButtonBase>
+            <span>
+                <ButtonBase
+                    variant="contained"
+                    color={props.color ?? "secondary"}
+                    onClick={props.onClick}
+                    disabled={props.disabled}
+                    sx={props.sx}
+                >
+                    {props.children}
+                </ButtonBase>
+            </span>
         </Tooltip>
     );
 };

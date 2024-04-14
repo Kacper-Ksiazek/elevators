@@ -1,12 +1,17 @@
+// Styles
 import "./App.css";
+// Tools and hooks
 import { useState } from "react";
-
+// Types
 import type { ElevatorSystemConfigToSave } from "@/components/InitialElevatorSystemConfig/@types.ts";
-
+// MUI Components
+import Fade from "@mui/material/Fade";
+// Components
 import ElevatorsSimulation from "@/components/ElevatorsSimulation";
 import InitialElevatorSystemConfig from "@/components/InitialElevatorSystemConfig";
+// Context Providers
+import RequestPickupContextProvider from "@/contexts/requestPickupContext/Provider.tsx";
 import ElevatorSystemContextProvider from "@/contexts/elevatorSystemContext/Provider.tsx";
-import Fade from "@mui/material/Fade";
 
 function App() {
     const [config, setConfig] = useState<ElevatorSystemConfigToSave | null>(null);
@@ -35,9 +40,11 @@ function App() {
         <Fade in={!fadeSimulationScreen}>
             <main>
                 <ElevatorSystemContextProvider config={config}>
-                    <ElevatorsSimulation
-                        reset={handleReset}
-                    />
+                    <RequestPickupContextProvider>
+                        <ElevatorsSimulation
+                            reset={handleReset}
+                        />
+                    </RequestPickupContextProvider>
                 </ElevatorSystemContextProvider>
             </main>
         </Fade>
