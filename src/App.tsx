@@ -10,9 +10,19 @@ import Fade from "@mui/material/Fade";
 
 function App() {
     const [config, setConfig] = useState<ElevatorSystemConfigToSave | null>(null);
+    const [fadeSimulationScreen, setFadeSimulationScreen] = useState<boolean>(false);
 
     function handleSaveConfig(_config: ElevatorSystemConfigToSave) {
         setConfig(_config);
+        setFadeSimulationScreen(false);
+    }
+
+    function handleReset() {
+        setFadeSimulationScreen(true);
+
+        setTimeout(() => {
+            setConfig(null);
+        }, 300);
     }
 
     if (config === null) return (
@@ -22,10 +32,12 @@ function App() {
     );
 
     return (
-        <Fade in={true}>
+        <Fade in={!fadeSimulationScreen}>
             <main>
                 <ElevatorSystemContextProvider config={config}>
-                    <ElevatorsSimulation />
+                    <ElevatorsSimulation
+                        reset={handleReset}
+                    />
                 </ElevatorSystemContextProvider>
             </main>
         </Fade>

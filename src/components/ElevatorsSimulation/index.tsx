@@ -7,16 +7,22 @@ import type { FunctionComponent } from "react";
 // Components
 import Box from "@mui/material/Box";
 import Button from "@/components/atoms/Button.tsx";
-import FullscreenButton from './FullscreenButton.tsx'
+import FullscreenButton from "./FullscreenButton.tsx";
 import Elevator from "@/components/ElevatorsSimulation/Elevator";
 // Icons
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import ShuffleRoundedIcon from "@mui/icons-material/ShuffleRounded";
 import ElevatorRoundedIcon from "@mui/icons-material/ElevatorRounded";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
-import FullscreenRoundedIcon from "@mui/icons-material/FullscreenRounded";
+import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
+import NavigateBeforeRoundedIcon from "@mui/icons-material/NavigateBeforeRounded";
 
-const ElevatorsSimulation: FunctionComponent = () => {
+interface ElevatorsSimulationProps {
+    /** The function to reset the Elevator System */
+    reset: () => void;
+}
+
+
+const ElevatorsSimulation: FunctionComponent<ElevatorsSimulationProps> = (props) => {
     const system = useElevatorSystemContext();
 
     function onMockClick() {
@@ -44,6 +50,9 @@ const ElevatorsSimulation: FunctionComponent = () => {
         system.doSimulationStep();
     }
 
+    function goBack() {
+        props.reset();
+    }
 
     return (
         <>
@@ -74,10 +83,21 @@ const ElevatorsSimulation: FunctionComponent = () => {
                     mt: "16px",
                     width: "100%",
                     ...theme.mixins.flex_center,
-                    gap: "8px"
-
+                    gap: "8px",
+                    padding: "0 16px"
                 })}
             >
+                <Button
+                    tooltip="Return to the system config menu"
+                    onClick={goBack}
+                    color="error"
+                >
+                    <NavigateBeforeRoundedIcon />
+                    Go back
+                </Button>
+
+                <span style={{ flexGrow: 1 }} />
+
                 <Button
                     onClick={onMockClick}
                     tooltip="Request an elevator ride"
@@ -99,7 +119,7 @@ const ElevatorsSimulation: FunctionComponent = () => {
                     onClick={onSimulationStepClick}
                     tooltip="Make a simulation step"
                 >
-                    <NavigateNextIcon />
+                    <NavigateNextRoundedIcon />
                     Make simulation step
                 </Button>
 
@@ -120,7 +140,9 @@ const ElevatorsSimulation: FunctionComponent = () => {
                     }}
                 />
 
-                <FullscreenButton/>
+                <span style={{ flexGrow: 1 }} />
+
+                <FullscreenButton />
             </Box>
         </>
     );

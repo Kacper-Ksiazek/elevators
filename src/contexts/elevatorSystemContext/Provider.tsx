@@ -30,7 +30,6 @@ const ElevatorSystemContextProvider: FunctionComponent<ElevatorSystemContextProv
         setStatus([...system.current.status]);
     }, []);
 
-
     return (
         <elevatorSystemContext.Provider
             value={{
