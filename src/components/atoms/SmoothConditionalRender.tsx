@@ -40,6 +40,8 @@ const SmoothConditionalRender: FunctionComponent<SmoothConditionalRenderProps> =
                 className="smooth-conditional-render-wrapper"
                 style={{
                     position: "absolute",
+                    display: "flex",
+                    alignItems: "center",
                     ...(props.styles)
                 } as CSSProperties}
             >

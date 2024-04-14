@@ -7,6 +7,7 @@ import type { FunctionComponent } from "react";
 // Components
 import Box from "@mui/material/Box";
 import Button from "@/components/atoms/Button.tsx";
+import FullscreenButton from './FullscreenButton.tsx'
 import Elevator from "@/components/ElevatorsSimulation/Elevator";
 // Icons
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -42,6 +43,7 @@ const ElevatorsSimulation: FunctionComponent = () => {
     function onSimulationStepClick() {
         system.doSimulationStep();
     }
+
 
     return (
         <>
@@ -118,13 +120,7 @@ const ElevatorsSimulation: FunctionComponent = () => {
                     }}
                 />
 
-                <Button
-                    onClick={onSimulationStepClick}
-                    tooltip="Go fullscreen"
-                >
-                    <FullscreenRoundedIcon />
-                    Fullscreen
-                </Button>
+                <FullscreenButton/>
             </Box>
         </>
     );

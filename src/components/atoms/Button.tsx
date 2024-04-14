@@ -1,5 +1,5 @@
 // Tools
-import { styled } from "@mui/material";
+import { styled, type SxProps } from "@mui/material";
 // Types
 import type { FunctionComponent, PropsWithChildren } from "react";
 // Material UI Components
@@ -7,7 +7,11 @@ import MUIButton from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 // Styles
 const ButtonBase = styled(MUIButton)(({ theme }) => ({
-    //
+    alignItems: "center",
+    display: "flex",
+    svg: {
+        marginRight: "4px"
+    }
 }));
 
 interface ButtonProps extends PropsWithChildren {
@@ -17,6 +21,12 @@ interface ButtonProps extends PropsWithChildren {
     onClick: () => void;
     /** Whether the button is disabled */
     disabled?: boolean;
+
+    /** The color of the button */
+    color?: "primary" | "secondary" | "error";
+
+    /** The style properties */
+    sx?: SxProps;
 }
 
 const Button: FunctionComponent<ButtonProps> = (props) => {
@@ -24,9 +34,10 @@ const Button: FunctionComponent<ButtonProps> = (props) => {
         <Tooltip title={props.tooltip}>
             <ButtonBase
                 variant="contained"
-                color="secondary"
+                color={props.color ?? "secondary"}
                 onClick={props.onClick}
                 disabled={props.disabled}
+                sx={props.sx}
             >
                 {props.children}
             </ButtonBase>
