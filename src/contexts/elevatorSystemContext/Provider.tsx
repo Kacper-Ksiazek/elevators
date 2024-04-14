@@ -25,6 +25,8 @@ const ElevatorSystemContextProvider: FunctionComponent<ElevatorSystemContextProv
 
     const [simulationRefreshKey, setSimulationRefreshKey] = useState<number>(1);
 
+    const simulationHasStarted = useRef<boolean>(false);
+
     const doSimulationStep = useCallback(() => {
         system.current.doSimulationStep();
         setStatus([...system.current.status]);
@@ -44,9 +46,13 @@ const ElevatorSystemContextProvider: FunctionComponent<ElevatorSystemContextProv
         if (!system.current.simulationCanProceed) {
             setIsSimulationRunning(false);
 
-            toast.success("Simulation is done!", {
-                theme: "colored"
-            });
+            if (simulationHasStarted.current) {
+                toast.success("Simulation is done!", {
+                    theme: "colored"
+                });
+
+                simulationHasStarted.current = false;
+            }
 
         }
     }, [system.current.simulationCanProceed]);
@@ -54,6 +60,7 @@ const ElevatorSystemContextProvider: FunctionComponent<ElevatorSystemContextProv
     // Simulation loop
     useEffect(() => {
         if (isSimulationRunning) {
+            simulationHasStarted.current = true;
             doSimulationStep();
             setSimulationRefreshKey(1);
 
