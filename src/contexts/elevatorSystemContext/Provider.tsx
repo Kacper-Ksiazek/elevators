@@ -1,8 +1,9 @@
 import { elevatorSystemContext } from ".";
 import { ElevatorSystem } from "@Elevator/index.ts";
-import { FunctionComponent, ReactNode, useCallback, useRef, useState } from "react";
+import React, { FunctionComponent, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { ElevatorSystemConfigToSave } from "@/components/InitialElevatorSystemConfig/@types.ts";
 import type { ElevatorRequest } from "@Elevator/@types.ts";
+import { toast } from "react-toastify";
 
 interface ElevatorSystemContextProviderProps {
     config: ElevatorSystemConfigToSave;
@@ -20,6 +21,10 @@ const ElevatorSystemContextProvider: FunctionComponent<ElevatorSystemContextProv
         system.current.status
     );
 
+    const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(false);
+
+    const [simulationRefreshKey, setSimulationRefreshKey] = useState<number>(1);
+
     const doSimulationStep = useCallback(() => {
         system.current.doSimulationStep();
         setStatus([...system.current.status]);
@@ -30,6 +35,37 @@ const ElevatorSystemContextProvider: FunctionComponent<ElevatorSystemContextProv
         setStatus([...system.current.status]);
     }, []);
 
+    function toggleSimulationRunning() {
+        setIsSimulationRunning(val => !val);
+    }
+
+    // Auto-pause simulation loop when it can't proceed
+    useEffect(() => {
+        if (!system.current.simulationCanProceed) {
+            setIsSimulationRunning(false);
+
+            toast.success("Simulation is done!", {
+                theme: "colored"
+            });
+
+        }
+    }, [system.current.simulationCanProceed]);
+
+    // Simulation loop
+    useEffect(() => {
+        if (isSimulationRunning) {
+            doSimulationStep();
+            setSimulationRefreshKey(1);
+
+            const interval = setInterval(() => {
+                doSimulationStep();
+                setSimulationRefreshKey(prev => prev + 1);
+            }, 500);
+
+            return () => clearInterval(interval);
+        }
+    }, [doSimulationStep, isSimulationRunning]);
+
     return (
         <elevatorSystemContext.Provider
             value={{
@@ -37,8 +73,11 @@ const ElevatorSystemContextProvider: FunctionComponent<ElevatorSystemContextProv
                 elevatorsAmount: system.current.elevatorsAmount,
                 simulationCanProceed: system.current.simulationCanProceed,
                 status,
+                isSimulationRunning,
                 doSimulationStep,
-                requestElevator
+                requestElevator,
+                simulationRefreshKey,
+                toggleSimulationRunning
             }}
         >
             {props.children}

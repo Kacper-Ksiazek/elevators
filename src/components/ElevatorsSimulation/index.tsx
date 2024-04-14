@@ -6,15 +6,16 @@ import { useElevatorSystemContext } from "@/hooks/useElevatorSystemContext.ts";
 import type { FunctionComponent } from "react";
 // Components
 import Box from "@mui/material/Box";
+import ProgressBar from "./ProgressBar.tsx";
 import Button from "@/components/atoms/Button.tsx";
 import FullscreenButton from "./FullscreenButton.tsx";
 import Elevator from "@/components/ElevatorsSimulation/Elevator";
 // Icons
 import ShuffleRoundedIcon from "@mui/icons-material/ShuffleRounded";
 import ElevatorRoundedIcon from "@mui/icons-material/ElevatorRounded";
-import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import NavigateBeforeRoundedIcon from "@mui/icons-material/NavigateBeforeRounded";
+import PlayButton from "@/components/ElevatorsSimulation/PlayButton.tsx";
 
 interface ElevatorsSimulationProps {
     /** The function to reset the Elevator System */
@@ -91,6 +92,7 @@ const ElevatorsSimulation: FunctionComponent<ElevatorsSimulationProps> = (props)
                     tooltip="Return to the system config menu"
                     onClick={goBack}
                     color="error"
+                    disabled={system.isSimulationRunning}
                 >
                     <NavigateBeforeRoundedIcon />
                     Go back
@@ -101,6 +103,7 @@ const ElevatorsSimulation: FunctionComponent<ElevatorsSimulationProps> = (props)
                 <Button
                     onClick={onMockClick}
                     tooltip="Request an elevator ride"
+                    disabled={system.isSimulationRunning}
                 >
                     <ElevatorRoundedIcon />
                     Pickup
@@ -109,13 +112,14 @@ const ElevatorsSimulation: FunctionComponent<ElevatorsSimulationProps> = (props)
                 <Button
                     onClick={onMockClick}
                     tooltip="Generate a few random routes for each elevator"
+                    disabled={system.isSimulationRunning}
                 >
                     <ShuffleRoundedIcon />
                     Generate
                 </Button>
 
                 <Button
-                    disabled={!system.simulationCanProceed}
+                    disabled={!system.simulationCanProceed || system.isSimulationRunning}
                     onClick={onSimulationStepClick}
                     tooltip="Make a simulation step"
                 >
@@ -123,22 +127,9 @@ const ElevatorsSimulation: FunctionComponent<ElevatorsSimulationProps> = (props)
                     Make simulation step
                 </Button>
 
-                <Button
-                    disabled={!system.simulationCanProceed}
-                    onClick={onSimulationStepClick}
-                    tooltip="Play the simulation"
-                >
-                    <PlayArrowRoundedIcon />
-                    Play
-                </Button>
+                <PlayButton />
 
-                <Box
-                    sx={{
-                        width: "300px",
-                        height: "6px",
-                        background: "black"
-                    }}
-                />
+                <ProgressBar />
 
                 <span style={{ flexGrow: 1 }} />
 
