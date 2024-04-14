@@ -6,6 +6,7 @@ import type { ElevatorState, ElevatorStatus } from "@Elevator/@types.ts";
 import PauseRoundedIcon from "@mui/icons-material/PauseRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
 import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
+import SmoothConditionalRender from "@/components/atoms/SmoothConditionalRender.tsx";
 
 const MoveDirectionBase = styled("div")(({ theme }) => ({
     height: "48px",
@@ -15,6 +16,10 @@ const MoveDirectionBase = styled("div")(({ theme }) => ({
     svg: {
         fontSize: "48px",
         color: "inherit"
+    },
+
+    "&> span": {
+        ...theme.mixins.flex_center
     }
 }));
 
@@ -26,28 +31,20 @@ interface MoveDirectionProps {
 const MoveDirection: FunctionComponent<MoveDirectionProps> = (props) => {
     return (
         <MoveDirectionBase sx={{ color: props.color }}>
-            {(() => {
-                switch (props.status) {
-                    case "MOVING_UP":
-                        return <>
-                            <ArrowUpwardRoundedIcon />
-                            <span>Moving up</span>
-                        </>;
-                    case "MOVING_DOWN":
-                        return <>
-                            <ArrowDownwardRoundedIcon />
-                            <span>Moving down</span>
-                        </>;
-                    case "STOPPED_AT_FLOOR":
-                        return <>
-                            <PauseRoundedIcon />
-                            <span>Stopped at floor</span>
-                        </>;
-                    default:
-                        return <></>;
-                }
-            })()}
+            <SmoothConditionalRender when={props.status === "STOPPED_AT_FLOOR"}>
+                <PauseRoundedIcon />
+                <span>Stopped at floor</span>
+            </SmoothConditionalRender>
 
+            <SmoothConditionalRender when={props.status === "MOVING_UP"}>
+                <ArrowUpwardRoundedIcon />
+                <span>Moving up</span>
+            </SmoothConditionalRender>
+
+            <SmoothConditionalRender when={props.status === "MOVING_DOWN"}>
+                <ArrowDownwardRoundedIcon />
+                <span>Moving down</span>
+            </SmoothConditionalRender>
         </MoveDirectionBase>
     );
 };
