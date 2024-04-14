@@ -6,8 +6,14 @@ import { useElevatorSystemContext } from "@/hooks/useElevatorSystemContext.ts";
 import type { FunctionComponent } from "react";
 // Components
 import Box from "@mui/material/Box";
-import { Button } from "@mui/material";
+import Button from "@/components/atoms/Button.tsx";
 import Elevator from "@/components/ElevatorsSimulation/Elevator";
+// Icons
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import ShuffleRoundedIcon from "@mui/icons-material/ShuffleRounded";
+import ElevatorRoundedIcon from "@mui/icons-material/ElevatorRounded";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import FullscreenRoundedIcon from "@mui/icons-material/FullscreenRounded";
 
 const ElevatorsSimulation: FunctionComponent = () => {
     const system = useElevatorSystemContext();
@@ -39,13 +45,15 @@ const ElevatorsSimulation: FunctionComponent = () => {
 
     return (
         <>
-            <Box sx={{
-                display: "flex",
-                gap: "16px",
-                height: "calc(100vh - 96px)",
-                width: "100%",
-                justifyContent: "center"
-            }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    gap: "16px",
+                    height: "calc(100vh - 96px)",
+                    width: "100%",
+                    justifyContent: "center"
+                }}
+            >
                 {system.status.map((item, index) => {
                     return (
                         <Elevator
@@ -57,33 +65,69 @@ const ElevatorsSimulation: FunctionComponent = () => {
                 })}
             </Box>
 
-            <Box sx={theme => ({
-                background: "red",
-                height: "64px",
-                mt: "16px",
-                width: "100%",
-                ...theme.mixins.flex_center,
-                gap: "8px"
+            <Box
+                sx={theme => ({
+                    background: theme.palette.background.default,
+                    height: "64px",
+                    mt: "16px",
+                    width: "100%",
+                    ...theme.mixins.flex_center,
+                    gap: "8px"
 
-            })}>
-                <Button variant="contained"
-                        color="secondary"
-                        onClick={onMockClick}
+                })}
+            >
+                <Button
+                    onClick={onMockClick}
+                    tooltip="Request an elevator ride"
                 >
-                    Mock
+                    <ElevatorRoundedIcon />
+                    Pickup
                 </Button>
 
-                <Button variant="contained"
-                        color="secondary"
-                        disabled={system.status.every(el => el.status === "IDLE")}
-                        onClick={onSimulationStepClick}
+                <Button
+                    onClick={onMockClick}
+                    tooltip="Generate a few random routes for each elevator"
                 >
+                    <ShuffleRoundedIcon />
+                    Generate
+                </Button>
+
+                <Button
+                    disabled={system.status.every(el => el.status === "IDLE")}
+                    onClick={onSimulationStepClick}
+                    tooltip="Make a simulation step"
+                >
+                    <NavigateNextIcon />
                     Make simulation step
+                </Button>
+
+                <Button
+                    disabled={system.status.every(el => el.status === "IDLE")}
+                    onClick={onSimulationStepClick}
+                    tooltip="Play the simulation"
+                >
+                    <PlayArrowRoundedIcon />
+                    Play
+                </Button>
+
+                <Box
+                    sx={{
+                        width: "300px",
+                        height: "6px",
+                        background: "black"
+                    }}
+                />
+
+                <Button
+                    onClick={onSimulationStepClick}
+                    tooltip="Go fullscreen"
+                >
+                    <FullscreenRoundedIcon />
+                    Fullscreen
                 </Button>
             </Box>
         </>
-    )
-        ;
+    );
 };
 
 export default ElevatorsSimulation;
