@@ -4,17 +4,29 @@ import Elevator from "@/components/ElevatorsSimulation/Elevator";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
 import { generateMockElevatorRoute } from "./utils";
+import { toast } from "react-toastify";
 
 const ElevatorsSimulation: FunctionComponent = () => {
     const system = useElevatorSystemContext();
 
     function onMockClick() {
+        let numberOfRoutesGeneratedPerElevator: number | null = null;
+
         system.status.forEach((elevator) => {
-            generateMockElevatorRoute({
+            numberOfRoutesGeneratedPerElevator = generateMockElevatorRoute({
                 elevatorID: elevator.elevatorID,
                 maxFloor: system.maxFloor,
                 requestElevator: system.requestElevator
             });
+        });
+
+        const msgPrefix: string = numberOfRoutesGeneratedPerElevator === 1 ?
+            "1 route has been" :
+            `${numberOfRoutesGeneratedPerElevator} routes have been`;
+
+        toast(`${msgPrefix} generated for each elevator`, {
+            type: "success",
+            theme: "colored"
         });
     }
 

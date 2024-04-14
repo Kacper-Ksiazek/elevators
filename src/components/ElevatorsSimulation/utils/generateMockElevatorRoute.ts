@@ -1,10 +1,5 @@
 import type { ElevatorRequest, ElevatorState } from "@Elevator/@types.ts";
 
-interface GenerateMockElevatorRouteProps {
-    maxFloor: number;
-    elevatorID: ElevatorState["elevatorID"];
-    requestElevator: (request: ElevatorRequest) => void;
-}
 
 function randomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -21,7 +16,13 @@ function generateTwoDifferentRandomInts(min: number, max: number): [number, numb
     return [firstRandomInt, secondRandomInt];
 }
 
-export function generateMockElevatorRoute(params: GenerateMockElevatorRouteProps): void {
+interface GenerateMockElevatorRouteProps {
+    elevatorID: ElevatorState["elevatorID"];
+    maxFloor: number;
+    requestElevator: (request: ElevatorRequest) => void;
+}
+
+export function generateMockElevatorRoute(params: GenerateMockElevatorRouteProps): number {
     const numberOfRidesToGenerate: number = Math.floor(params.maxFloor / 3);
 
     for (let i = 0; i < numberOfRidesToGenerate; i++) {
@@ -33,5 +34,7 @@ export function generateMockElevatorRoute(params: GenerateMockElevatorRouteProps
             destinationFloor
         });
     }
+
+    return numberOfRidesToGenerate;
 
 }
