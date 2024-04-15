@@ -1,14 +1,14 @@
 import { ElevatorRoute } from "@Elevator/ElevatorRoute.ts";
 import { ElevatorCannotMoveThereError } from "@Elevator/Errors/ElevatorCannotMoveThereError.ts";
 
-import type { ElevatorMoveDirection, ElevatorStatus } from "./@types.ts";
+import type { Elevator as IElevator, ElevatorMoveDirection, ElevatorStatus } from "./@types.ts";
 import { ProxyStops } from "@Elevator/ProxyStops.ts";
 
-export class Elevator {
+
+export class Elevator implements IElevator {
     /** Elevator has stopped at a floor in order to pick up or drop off passengers */
     private _isAtPause: boolean = false;
 
-    /** All routes the elevator has to take in order */
     public routes: ElevatorRoute[] = [];
     public proxies: ProxyStops = new ProxyStops();
 

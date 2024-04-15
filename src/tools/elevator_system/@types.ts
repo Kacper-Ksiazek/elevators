@@ -1,10 +1,18 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
+import { ElevatorRoute } from "@Elevator/ElevatorRoute.ts";
+import { ProxyStops } from "@Elevator/ProxyStops.ts";
+
+/** The ID of an elevator */
 export type ElevatorID = `elevator-${number}`;
+
+/** The direction of elevator movement */
 export type ElevatorMoveDirection = "UP" | "DOWN";
 
+/** The status of an elevator */
 export type ElevatorStatus = `MOVING_${ElevatorMoveDirection}` | "STOPPED_AT_FLOOR" | "IDLE";
 
+/** Interface describing the state of an elevator */
 export interface ElevatorState {
     elevatorID: ElevatorID;
 
@@ -46,4 +54,26 @@ export interface ElevatorSystem {
 
     /** Simulate a step of the elevator system */
     doSimulationStep(): void;
+}
+export interface Elevator {
+    /** All routes the elevator has to take in order */
+    routes: ElevatorRoute[];
+
+    /** All floors that are connected by proxies */
+    proxies: ProxyStops;
+
+    /** The current status of the elevator */
+    status: ElevatorStatus;
+
+    /** The current floor the elevator is on */
+    currentFloor: number;
+
+    /** Request the elevator to pick up a person from and to specific floors */
+    pickup(startFloor: number, destinationFloor: number): void;
+
+    /** Request the elevator to pick up a person from the current floor to a specific floor */
+    pickupFromCurrentFloor(destinationFloor: number | number []): void;
+
+    /** Perform a simulation step of the elevator system */
+    makeSimulationMove(): void;
 }
