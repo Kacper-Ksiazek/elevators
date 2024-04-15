@@ -1,11 +1,11 @@
+// Types
 import type { FunctionComponent } from "react";
 import { useState } from "react";
-
 import type { ElevatorSystemConfigToSave } from "@/components/InitialElevatorSystemConfig/@types.ts";
-
+// Components
 import SliderPanel from "./SliderPanel";
+import AuthorHeader from "./AuthorHeader.tsx";
 import { Box, Button, Fade, Stack, Typography } from "@mui/material";
-
 
 interface InitialElevatorSystemConfigProps {
     /** Callback to save the configuration */
@@ -34,7 +34,14 @@ const InitialElevatorSystemConfig: FunctionComponent<InitialElevatorSystemConfig
 
     return (
         <Fade in={!hideThisScreen}>
-            <Stack sx={{ pt: 4 }} spacing={3} alignItems="center" justifyContent="center">
+            <Stack
+                sx={{
+                    pt: 16
+                }}
+                spacing={3}
+                alignItems="center"
+                justifyContent="center"
+            >
                 <Typography variant="h2">Adjust the Elevator System</Typography>
 
                 <Box
@@ -89,6 +96,8 @@ const InitialElevatorSystemConfig: FunctionComponent<InitialElevatorSystemConfig
                         Continue
                     </Button>
                 </Box>
+
+                <AuthorHeader />
             </Stack>
         </Fade>
     );
