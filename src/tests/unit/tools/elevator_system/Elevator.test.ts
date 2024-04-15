@@ -256,7 +256,7 @@ describe("Request an elevator from the floor in opposite direction", () => {
         expect(elevator.routes[1].stops).toEqual([6]);
         expect(elevator.routes[1].direction).toEqual("UP");
 
-        expect(elevator.proxies.getConnectedFloors(5,false)).toEqual([10]);
+        expect(elevator.proxies.getConnectedFloors(5, false)).toEqual([10]);
         expect(elevator.proxies.getConnectedFloors(6, false)).toEqual([10]);
 
         elevator.makeSimulationMove(); // floor 6
@@ -277,7 +277,7 @@ describe("Request an elevator from the floor in opposite direction", () => {
         elevator.pickup(6, 10);
         elevator.pickup(5, 8);
 
-        printRoutes(elevator.routes);
+        // printRoutes(elevator.routes);
 
         expect(elevator.currentFloor).toEqual(7);
         expect(elevator.status).toEqual("MOVING_DOWN" as ElevatorStatus);
@@ -368,7 +368,6 @@ describe("Request an elevator from the floor in opposite direction", () => {
         expect(elevator.proxies.getConnectedFloors(5, false)).toEqual([3]);
     });
 
-    // TODO: Test how pickupFromCurrentFloor behave when elevator is in the move
     test("Request pickupFromCurrentFloor heading up when the elevator is in move", () => {
         const elevator = new Elevator(5);
         elevator.pickupFromCurrentFloor(10);
@@ -399,7 +398,6 @@ describe("Request an elevator from the floor in opposite direction", () => {
         expect(elevator.currentFloor).toEqual(9);
     });
 
-    // TODO: Test picking up from floor 3 to 8 while the elevator is currently at 4 and goes to 7
     test("Request pickup from floor 3 to 8 while the elevator is currently at 4 and goes to 7", () => {
         const elevator = new Elevator(4);
         elevator.pickupFromCurrentFloor(7);
@@ -414,7 +412,7 @@ describe("Request an elevator from the floor in opposite direction", () => {
 
         elevator.pickup(3, 8);
 
-        printRoutes(elevator.routes);
+        // printRoutes(elevator.routes);
     });
 });
 
