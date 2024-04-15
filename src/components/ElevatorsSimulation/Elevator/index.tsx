@@ -1,46 +1,18 @@
 // Tools and hooks
 import { getElevatorPositionMark, getFloorName } from "./utils";
-import React, { FunctionComponent, useMemo } from "react";
+import { useFloors } from "./hooks/useFloors.ts";
 import { useElevatorSystemContext } from "@/hooks/useElevatorSystemContext.ts";
 import { useRequestPickupContext } from "@/hooks/useRequestPickupContext.ts";
 // Types
 import { ElevatorRequestingPickupClassName } from "./types.ts";
+import type { FunctionComponent } from "react";
 import type { ElevatorState } from "@Elevator/@types.ts";
 // Components
 import Floor from "./Floor.tsx";
 import MoveDirection from "./MoveDirection.tsx";
-import { keyframes, Stack, styled, Typography } from "@mui/material";
+import FloorsWrapper from "./FloorsWrapper.tsx";
+import { Stack, styled, Typography } from "@mui/material";
 import ElevatorCurrentPosition from "./ElevatorCurrentPosition.tsx";
-
-const fadeIn = keyframes({
-    "0%": {
-        opacity: 0,
-        visibility: "hidden"
-    },
-    "1%": {
-        opacity: 0,
-        visibility: "visible"
-    },
-    "100%": {
-        opacity: 1,
-        visibility: "visible"
-    }
-});
-
-const fadeOut = keyframes({
-    "0%": {
-        opacity: 1,
-        visibility: "visible"
-    },
-    "99%": {
-        opacity: 0,
-        visibility: "visible"
-    },
-    "100%": {
-        opacity: 0,
-        visibility: "hidden"
-    }
-});
 
 const ElevatorBase = styled("div")(({ theme }) => ({
     height: "100%",
@@ -54,60 +26,6 @@ const ElevatorBase = styled("div")(({ theme }) => ({
     }
 }));
 
-const FloorsWrapper = styled("div", {
-    shouldForwardProp: (prop: string) => prop !== "color"
-})<{ color: string }>(({ theme, ...props }) => ({
-    flexGrow: 1,
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-    gap: "2px",
-    transition: "opacity .3s",
-
-    ".current-floor": {
-        position: "absolute",
-        width: "100%"
-    },
-
-    "&:after": {
-        content: "''",
-        ...theme.mixins.absolute_full,
-        background: "#d2d2d2",
-        zIndex: 1,
-        transition: "all .2s",
-        opacity: 1,
-        cursor: "pointer",
-        animationDuration: ".2s",
-        animationPlayState: "linear",
-        animationName: fadeOut,
-        animationFillMode: "both"
-    },
-
-    [`&.${"picking_elevator" as ElevatorRequestingPickupClassName.Elevator}`]: {
-        "&:after": {
-            animationName: fadeIn
-        },
-        "&:hover:after": {
-            background: props.color
-        }
-    },
-
-    [`&.${"different_elevator_is_selected" as ElevatorRequestingPickupClassName.Elevator}`]: {
-        opacity: .16,
-        "&:after": {
-            animationName: fadeIn
-        }
-    }
-}));
-
-
-function useFloors(maxFloor: number): number[] {
-    return useMemo<number[]>(() => {
-        return [
-            ...Array.from({ length: maxFloor + 1 }, (_, i) => i)
-        ].reverse();
-    }, [maxFloor]);
-}
 
 interface ElevatorProps {
     data: ElevatorState;
@@ -120,16 +38,23 @@ const Elevator: FunctionComponent<ElevatorProps> = (props) => {
 
     const floors = useFloors(maxFloor);
 
+    /**
+     * Handles the click on the elevator ( one big vertical rectangle )
+     */
     function onElevatorClick() {
         requestPickupContext.updateRequestParams({
             elevatorID: props.data.elevatorID
         });
     }
 
+    /**
+     * Handles the click on the floor ( many small horizontal rectangles )
+     * @param floorNumber The number of the floor starting from 0
+     */
     function onFloorClick(floorNumber: number) {
-        const { updateRequestParams, requestParams } = requestPickupContext;
+        if (!requestPickupContext.isRequestingPickup) return;
 
-        console.log(requestParams);
+        const { updateRequestParams, requestParams } = requestPickupContext;
 
         if (requestParams.startFloor === null) {
             return updateRequestParams({

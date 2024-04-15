@@ -46,8 +46,8 @@ const FloorBase = styled("div", {
             "&:hover": {
                 background: alpha(props.color, .3)
             }
-
         },
+
         "&:not(&.active)": {
             background: "#d2d2d2",
             "&:hover": {
