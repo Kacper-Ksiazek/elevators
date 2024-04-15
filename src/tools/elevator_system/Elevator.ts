@@ -161,7 +161,7 @@ export class Elevator implements IElevator {
     private addElevatorStop(floor: number, direction: ElevatorMoveDirection) {
         // Otherwise, find the one that can fit the floor
         for (const move of this.routes) {
-            if (move.direction === direction && move.canFitInQueue(floor)) {
+            if (move.direction === direction && move.canFit(floor)) {
                 move.addStop(floor);
                 return;
             }

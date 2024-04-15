@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { ElevatorRoute } from "@Elevator/ElevatorRoute.ts";
 import { ProxyStops } from "@Elevator/ProxyStops.ts";
+import type { Stops } from "@Elevator/Stops.ts";
 
 /** The ID of an elevator */
 export type ElevatorID = `elevator-${number}`;
@@ -76,4 +76,18 @@ export interface Elevator {
 
     /** Perform a simulation step of the elevator system */
     makeSimulationMove(): void;
+}
+
+export interface ElevatorRoute {
+    /** The array of floors the elevator is going to stop at in order */
+    stops: Stops;
+
+    /** The direction in which the elevator is moving during this route */
+    direction: ElevatorMoveDirection;
+
+    /** Returns boolean value if the elevator can fit in the route*/
+    canFit(floor: number): boolean;
+
+    /** Add a new stop to the route */
+    addStop(floor: number): void;
 }

@@ -6,12 +6,12 @@ test(".canFitInQueue() while moving up", () => {
 
     // Test floors above
     [6, 10, 20, 30].forEach(floor => {
-        expect(move.canFitInQueue(floor)).toBe(true);
+        expect(move.canFit(floor)).toBe(true);
     });
 
     // Test floors below
     [4, 3, 2, 1, 0].forEach(floor => {
-        expect(move.canFitInQueue(floor)).toBe(false);
+        expect(move.canFit(floor)).toBe(false);
     });
 });
 
@@ -20,12 +20,12 @@ test(".canFitInQueue() while moving down", () => {
 
     // Test floors above
     [6, 10, 20, 30].forEach(floor => {
-        expect(move.canFitInQueue(floor)).toBe(false);
+        expect(move.canFit(floor)).toBe(false);
     });
 
     // Test floors below
     [4, 3, 2, 1, 0].forEach(floor => {
-        expect(move.canFitInQueue(floor)).toBe(true);
+        expect(move.canFit(floor)).toBe(true);
     });
 });
 

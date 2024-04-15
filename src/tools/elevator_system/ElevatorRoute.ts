@@ -4,12 +4,12 @@ import { Stops } from "@Elevator/Stops.ts";
 import { ElevatorCannotMoveThereError } from "@Elevator/Errors/ElevatorCannotMoveThereError.ts";
 import { ElevatorIsCurrentlyAtThisFloorError } from "@Elevator/Errors/ElevatorIsCurrentlyAtThisFloorError.ts";
 
-import type { ElevatorMoveDirection } from "./@types.ts";
+import type { ElevatorMoveDirection, ElevatorRoute as IElevatorRoute } from "./@types.ts";
 
 type CurrentFloor = number | "ADAPT";
 
-export class ElevatorRoute {
-    /** The array of floors the elevator is going to stop at in order */
+
+export class ElevatorRoute implements IElevatorRoute {
     public stops: Stops;
 
     get direction(): ElevatorMoveDirection {
@@ -23,7 +23,7 @@ export class ElevatorRoute {
         this.stops = new Stops();
     }
 
-    public canFitInQueue(floor: number): boolean {
+    public canFit(floor: number): boolean {
         if (this.currentFloor === "ADAPT") return true;
         // If the elevator is in direct connection mode, it can go to any floor, but only to the ONE floor
         if (this.directConnection) return this.stops.length === 0;
@@ -37,7 +37,7 @@ export class ElevatorRoute {
 
         // Check if the elevator can fit in the queue and if the floor is not the current floor
         if (this.currentFloor === floor) throw new ElevatorIsCurrentlyAtThisFloorError(this.currentFloor);
-        if (!this.canFitInQueue(floor)) throw new ElevatorCannotMoveThereError(`"The elevator cannot move to the given floor, because it is not in the right direction. Current floor: ${this.currentFloor}, destination floor: ${floor} and the direction is ${this.direction}.`);
+        if (!this.canFit(floor)) throw new ElevatorCannotMoveThereError(`"The elevator cannot move to the given floor, because it is not in the right direction. Current floor: ${this.currentFloor}, destination floor: ${floor} and the direction is ${this.direction}.`);
 
         // Insert the new stop in the right place
         this.stops.insertWithOrder(
