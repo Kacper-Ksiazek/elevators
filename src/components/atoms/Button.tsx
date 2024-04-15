@@ -23,7 +23,7 @@ interface ButtonProps extends PropsWithChildren {
     disabled?: boolean;
 
     /** The color of the button */
-    color?: "primary" | "secondary" | "error";
+    color?: "primary" | "secondary" | "error" | "success";
 
     /** The style properties */
     sx?: SxProps;

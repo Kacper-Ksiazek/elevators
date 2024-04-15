@@ -11,6 +11,7 @@ import RequestPickupButton from "./RequestPickupButton.tsx";
 import { AllButtonsWrapper, DynamicControlsWrapper } from "./_styled_components.tsx";
 import SmoothConditionalRender from "@/components/atoms/SmoothConditionalRender.tsx";
 import SimulationActionControls from "@/components/ElevatorsSimulation/SimulationActionControls";
+import RequestPickupActionControls from "@/components/ElevatorsSimulation/RequestPickupActionControls";
 // Icons
 import NavigateBeforeRoundedIcon from "@mui/icons-material/NavigateBeforeRounded";
 
@@ -55,6 +56,11 @@ const ElevatorsSimulation: FunctionComponent<ElevatorsSimulationProps> = (props)
                     {/* If the user is not requesting a pickup, show the simulation controls */}
                     <SmoothConditionalRender when={!isRequestingPickup}>
                         <SimulationActionControls />
+                    </SmoothConditionalRender>
+
+                    {/* If the user is requesting a pickup, show the pickup controls */}
+                    <SmoothConditionalRender when={isRequestingPickup}>
+                        <RequestPickupActionControls />
                     </SmoothConditionalRender>
 
                 </DynamicControlsWrapper>

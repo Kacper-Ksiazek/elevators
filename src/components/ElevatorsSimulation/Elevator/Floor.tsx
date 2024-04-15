@@ -1,9 +1,11 @@
 import { alpha, styled, Tooltip } from "@mui/material";
-import { ElevatorPositionMark } from "@/components/ElevatorsSimulation/Elevator/types.ts";
+import { getFloorName } from "@/components/ElevatorsSimulation/Elevator/utils";
 
 import type { FunctionComponent } from "react";
 import type { ElevatorState } from "@Elevator/@types.ts";
-import { getFloorName } from "@/components/ElevatorsSimulation/Elevator/utils";
+import type { ElevatorRequestingPickupClassName } from "./types.ts";
+
+import { ElevatorPositionMark } from "@/components/ElevatorsSimulation/Elevator/types.ts";
 
 const FloorBase = styled("div", {
     shouldForwardProp: (prop) => prop !== "color"
@@ -30,6 +32,28 @@ const FloorBase = styled("div", {
 
     [`&.${"stops_at" as ElevatorPositionMark}`]: {
         background: alpha(props.color, .7)
+    },
+
+    [`&.${"selected_floor" as ElevatorRequestingPickupClassName.Floor}`]: {
+        background: alpha(props.color, 1),
+        color: "#fff"
+    },
+
+    [`&.${"picking_floor" as ElevatorRequestingPickupClassName.Floor}`]: {
+        cursor: "pointer",
+        "&.active": {
+            background: alpha(props.color, .5),
+            "&:hover": {
+                background: alpha(props.color, .3)
+            }
+
+        },
+        "&:not(&.active)": {
+            background: "#d2d2d2",
+            "&:hover": {
+                background: alpha(props.color, .3)
+            }
+        }
     }
 }));
 
@@ -42,6 +66,10 @@ interface FloorProps {
 
     /** Whether the floor is active */
     mark: ElevatorPositionMark;
+
+    className?: string;
+
+    onClick: () => void;
 }
 
 function generateTooltipText(floorNumber: number, mark: ElevatorPositionMark): string {
@@ -59,8 +87,15 @@ function generateTooltipText(floorNumber: number, mark: ElevatorPositionMark): s
 
 const Floor: FunctionComponent<FloorProps> = (props) => {
     return (
-        <Tooltip title={generateTooltipText(props.floorNumber, props.mark)} placement="top">
-            <FloorBase className={props.mark} color={props.color}>
+        <Tooltip
+            title={generateTooltipText(props.floorNumber, props.mark)}
+            placement="top"
+        >
+            <FloorBase
+                className={`${props.className ?? ""} ${props.mark}`}
+                color={props.color}
+                onClick={props.onClick}
+            >
                 {props.floorNumber === 0 ? "GROUND" : props.floorNumber}
             </FloorBase>
         </Tooltip>

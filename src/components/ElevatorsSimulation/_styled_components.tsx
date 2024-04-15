@@ -18,10 +18,11 @@ export const DynamicControlsWrapper = styled("div")(({ theme }) => ({
     width: "840px",
     position: "relative",
 
-    "span.smooth-conditional-render-wrapper": {
+    "& > span.smooth-conditional-render-wrapper": {
         display: "flex",
         alignItems: "center",
-        gap: "8px"
+        gap: "8px",
+        width: "100%"
     }
 }));
 

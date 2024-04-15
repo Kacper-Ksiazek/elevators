@@ -1,8 +1,9 @@
 import { createContext, type Dispatch } from "react";
+import type { ElevatorID } from "@Elevator/@types.ts";
 
 export interface RequestedPickupParams {
     /** The elevator ID that the user is requesting a pickup from */
-    elevatorID: null | number;
+    elevatorID: null | ElevatorID;
 
     /** The floor number that the user is requesting a pickup from */
     startFloor: null | number;
