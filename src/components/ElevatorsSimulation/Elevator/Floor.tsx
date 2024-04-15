@@ -1,4 +1,5 @@
 import { alpha, styled, Tooltip } from "@mui/material";
+import { useRequestPickupContext } from "@/hooks/useRequestPickupContext.ts";
 import { getFloorName } from "@/components/ElevatorsSimulation/Elevator/utils";
 
 import type { FunctionComponent } from "react";
@@ -6,6 +7,7 @@ import type { ElevatorState } from "@Elevator/@types.ts";
 import type { ElevatorRequestingPickupClassName } from "./types.ts";
 
 import { ElevatorPositionMark } from "@/components/ElevatorsSimulation/Elevator/types.ts";
+import type { RequestedPickupParams } from "@/contexts/requestPickupContext";
 
 const FloorBase = styled("div", {
     shouldForwardProp: (prop) => prop !== "color"
@@ -72,7 +74,23 @@ interface FloorProps {
     onClick: () => void;
 }
 
-function generateTooltipText(floorNumber: number, mark: ElevatorPositionMark): string {
+function generateTooltipText(params: {
+    floorNumber: number,
+    mark: ElevatorPositionMark
+    requestParams: RequestedPickupParams
+    isRequestingPickup: boolean
+}): string {
+    const { requestParams, mark, floorNumber, isRequestingPickup } = params;
+
+    if (isRequestingPickup) {
+        if (requestParams.startFloor === null) {
+            return `Pick a starting floor`;
+        } else if (requestParams.destinationFloor === null) {
+            return `Pick a destination floor`;
+        }
+        return "";
+    }
+    //
     switch (mark) {
         case "active":
             return `Elevator is currently at ${getFloorName(floorNumber)} floor`;
@@ -86,9 +104,15 @@ function generateTooltipText(floorNumber: number, mark: ElevatorPositionMark): s
 }
 
 const Floor: FunctionComponent<FloorProps> = (props) => {
+    const { isRequestingPickup, requestParams } = useRequestPickupContext();
     return (
         <Tooltip
-            title={generateTooltipText(props.floorNumber, props.mark)}
+            title={generateTooltipText({
+                isRequestingPickup,
+                requestParams,
+                mark: props.mark,
+                floorNumber: props.floorNumber
+            })}
             placement="top"
         >
             <FloorBase

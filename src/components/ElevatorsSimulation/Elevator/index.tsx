@@ -42,6 +42,8 @@ const Elevator: FunctionComponent<ElevatorProps> = (props) => {
      * Handles the click on the elevator ( one big vertical rectangle )
      */
     function onElevatorClick() {
+        if (!requestPickupContext.isRequestingPickup || requestPickupContext.requestParams.elevatorID !== null) return;
+
         requestPickupContext.updateRequestParams({
             elevatorID: props.data.elevatorID
         });

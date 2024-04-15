@@ -26,7 +26,6 @@ const FloorsWrapperBase = styled("div", {
         zIndex: 1,
         transition: "all .2s",
         opacity: 1,
-        cursor: "pointer",
         animationDuration: ".2s",
         animationPlayState: "linear",
         animationName: fadeOut,
@@ -38,6 +37,7 @@ const FloorsWrapperBase = styled("div", {
             animationName: fadeIn
         },
         "&:hover:after": {
+            cursor: "pointer",
             background: props.color
         }
     },
