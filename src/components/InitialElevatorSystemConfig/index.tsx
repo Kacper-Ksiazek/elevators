@@ -12,6 +12,11 @@ interface InitialElevatorSystemConfigProps {
     saveConfig: (config: ElevatorSystemConfigToSave) => void;
 }
 
+const RECOMMENDED_VALUES: Record<"floors" | "elevators", number> = {
+    floors: 14,
+    elevators: 8
+};
+
 const InitialElevatorSystemConfig: FunctionComponent<InitialElevatorSystemConfigProps> = (props) => {
     const [numberOfFloors, setNumberOfFloors] = useState<number>(4);
     const [numberOfElevators, setNumberOfElevators] = useState<number>(3);
@@ -20,8 +25,8 @@ const InitialElevatorSystemConfig: FunctionComponent<InitialElevatorSystemConfig
 
 
     function handleSetRecommendedValuesButtonOnClick() {
-        setNumberOfFloors(14);
-        setNumberOfElevators(3);
+        setNumberOfFloors(RECOMMENDED_VALUES.floors);
+        setNumberOfElevators(RECOMMENDED_VALUES.elevators);
     }
 
     function handleContinueButtonOnClick() {
@@ -56,14 +61,14 @@ const InitialElevatorSystemConfig: FunctionComponent<InitialElevatorSystemConfig
                         description="The number of floors in the building. Ground floor is included separately."
                         label="Floors"
                         restrictions={{ min: 4, max: 20 }}
-                        recommendedValue={14}
+                        recommendedValue={RECOMMENDED_VALUES.floors}
                         setValue={setNumberOfFloors}
                     />
 
                     <SliderPanel
                         value={numberOfElevators}
                         label="Elevators"
-                        recommendedValue={3}
+                        recommendedValue={RECOMMENDED_VALUES.elevators}
                         description="The number of elevators in the building. Each elevator can access all floors."
                         restrictions={{ min: 1, max: 16 }}
                         setValue={setNumberOfElevators}
@@ -84,7 +89,9 @@ const InitialElevatorSystemConfig: FunctionComponent<InitialElevatorSystemConfig
                         variant="contained"
                         color="secondary"
                         onClick={handleSetRecommendedValuesButtonOnClick}
-                        disabled={numberOfFloors === 14 && numberOfElevators === 3}
+                        disabled={numberOfFloors === RECOMMENDED_VALUES.floors &&
+                            numberOfElevators === RECOMMENDED_VALUES.elevators
+                        }
                     >
                         Set recommended values
                     </Button>
